@@ -129,6 +129,19 @@ canvas {
   text-align: center;
 }
 
+.sig-preview {
+  border: 1px solid #ccc;
+  margin-top: 10px;
+  padding: 10px;
+  text-align: center;
+  background: #f9f9f9;
+}
+
+.sig-preview img {
+  max-width: 150px;
+  max-height: 100px;
+}
+
 @media (max-width: 1024px) {
   .container {
     grid-template-columns: 1fr;
@@ -219,25 +232,7 @@ const messageDiv = document.getElementById("message");
 const canvasMessage = document.getElementById("canvasMessage");
 let signatureImage = null;
 
-// Create a placeholder background
-function createPlaceholderBg() {
-  ctx.fillStyle = "#ffffff";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  
-  ctx.strokeStyle = "#000";
-  ctx.lineWidth = 2;
-  ctx.strokeRect(0, 0, canvas.width, canvas.height);
-  
-  ctx.fillStyle = "#999";
-  ctx.font = "36px Arial";
-  ctx.textAlign = "center";
-  ctx.fillText("स्वप्रमाणित घोषणा पत्र", canvas.width / 2, 100);
-  ctx.font = "24px Arial";
-  ctx.fillText("(Background Image Loading...)", canvas.width / 2, 150);
-  ctx.textAlign = "left";
-}
-
-// Load background image without stretching
+// Load background image
 const bg = new Image();
 let bgLoaded = false;
 
@@ -259,15 +254,7 @@ function loadImage() {
 bg.onload = () => {
   bgLoaded = true;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
-  // Increased width - stretch horizontally while maintaining height
-  const imgWidth = bg.naturalWidth;
-  const imgHeight = bg.naturalHeight;
-  
-  const drawHeight = canvas.height;
-  const drawWidth = canvas.width;
-  
-  ctx.drawImage(bg, 0, 0, drawWidth, drawHeight);
+  ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
   canvasMessage.textContent = "✓ Image loaded!";
 };
 
@@ -275,28 +262,67 @@ bg.onerror = () => {
   if (pathIndex < imagePaths.length) {
     loadImage();
   } else {
-    createPlaceholderBg();
-    canvasMessage.textContent = "⚠ Using placeholder";
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    canvasMessage.textContent = "⚠ Using white background";
   }
 };
 
 loadImage();
 
-// Signature file upload handler
+// Remove white/light background from signature
+function removeWhiteBackground(imgData) {
+  const data = imgData.data;
+  const threshold = 240; // Colors lighter than this are considered background
+  
+  for (let i = 0; i < data.length; i += 4) {
+    const r = data[i];
+    const g = data[i + 1];
+    const b = data[i + 2];
+    const a = data[i + 3];
+    
+    // If pixel is light (white/light background)
+    if (r > threshold && g > threshold && b > threshold) {
+      data[i + 3] = 0; // Make transparent
+    }
+  }
+  
+  return imgData;
+}
+
+// Signature upload handler
 document.getElementById("signatureFile").addEventListener("change", function(e) {
   const file = e.target.files[0];
   if (file) {
+    messageDiv.textContent = "⏳ Processing signature...";
+    
     const reader = new FileReader();
     reader.onload = function(event) {
-      signatureImage = new Image();
-      signatureImage.onload = function() {
-        messageDiv.textContent = "✓ Signature loaded!";
-        generate();
+      const img = new Image();
+      img.onload = function() {
+        // Create temporary canvas to process image
+        const tempCanvas = document.createElement("canvas");
+        tempCanvas.width = img.width;
+        tempCanvas.height = img.height;
+        const tempCtx = tempCanvas.getContext("2d");
+        
+        // Draw image on temp canvas
+        tempCtx.drawImage(img, 0, 0);
+        
+        // Get image data and remove white background
+        const imgData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+        const processedData = removeWhiteBackground(imgData);
+        tempCtx.putImageData(processedData, 0, 0);
+        
+        // Convert to image and use it
+        signatureImage = new Image();
+        signatureImage.onload = function() {
+          messageDiv.textContent = "✓ Signature processed (background removed)!";
+          generate();
+        };
+        signatureImage.src = tempCanvas.toDataURL("image/png");
       };
-      signatureImage.onerror = function() {
-        messageDiv.textContent = "⚠ Error loading signature";
-      };
-      signatureImage.src = event.target.result;
+      img.src = event.target.result;
     };
     reader.readAsDataURL(file);
   }
@@ -311,10 +337,7 @@ function generate() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   
   if (bgLoaded) {
-    const drawHeight = canvas.height;
-    const drawWidth = canvas.width;
-    
-    ctx.drawImage(bg, 0, 0, drawWidth, drawHeight);
+    ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
   }
 
   ctx.fillStyle = "blue";
@@ -360,30 +383,25 @@ function download() {
     return;
   }
 
-  // Get applicant name and convert to English filename
   const applicantName = document.getElementById("applicant").value.trim() || "Affidavit";
   const englishFileName = convertToEnglish(applicantName);
   const fileName = `${englishFileName}_Affidavit.jpg`;
 
-  messageDiv.textContent = "⏳ Compressing...";
+  messageDiv.textContent = "⏳ Downloading...";
 
-  // Create smaller canvas for compression
   const smallCanvas = document.createElement("canvas");
   const smallCtx = smallCanvas.getContext("2d");
   
-  // Reduce canvas size to 50% to drastically reduce file size
   smallCanvas.width = canvas.width * 0.5;
   smallCanvas.height = canvas.height * 0.5;
   
-  // Draw scaled image
   smallCtx.drawImage(canvas, 0, 0, smallCanvas.width, smallCanvas.height);
 
   let quality = 0.3;
-  let blob;
   
   const tryCompress = () => {
     const dataUrl = smallCanvas.toDataURL("image/jpeg", quality);
-    blob = dataURItoBlob(dataUrl);
+    const blob = dataURItoBlob(dataUrl);
     
     if (blob.size > 102400 && quality > 0.05) {
       quality -= 0.05;
@@ -422,11 +440,11 @@ function convertToEnglish(text) {
     'च': 'Ch', 'छ': 'Chh', 'ज': 'J', 'झ': 'Jh', 'ञ': 'Ny',
     'ट': 'T', 'ठ': 'Th', 'ड': 'D', 'ढ': 'Dh', 'ण': 'N',
     'त': 'T', 'थ': 'Th', 'द': 'D', 'ध': 'Dh', 'न': 'N',
-    'प': 'P', 'फ': 'Ph', 'ब': 'B', 'भ': 'Bh', 'म ': 'M',
+    'प': 'P', 'फ': 'Ph', 'ब': 'B', 'भ': 'Bh', 'म': 'M',
     'य': 'Y', 'र': 'R', 'ल': 'L', 'व': 'V',
     'श': 'Sh', 'ष': 'Sh', 'स': 'S', 'ह': 'H',
     '०': '0', '१': '1', '२': '2', '३': '3', '४': '4',
-    '५': '5', '६': '6', '७': '7', '८G': '8', '९': '9'
+    '५': '5', '६': '6', '७': '7', '८': '8', '९': '9'
   };
 
   let result = '';
