@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<title>स्वप्रमाणित घोषणा पत्र Generator</title>
+
+<!-- Vesper Libre Font -->
+<link href="https://fonts.googleapis.com/css2?family=Vesper+Libre:wght@500&display=swap" rel="stylesheet">
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f4f4;
+  padding: 20px;
+}
+
+.container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+.left-panel {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  max-height: 100vh;
+  overflow-y: auto;
+}
+
+.right-panel {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h2 {
+  margin-bottom: 20px;
+  color: blue;
+  font-size: 18px;
+}
+
+.form-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.form-group {
+  margin-bottom: 12px;
+}
+
+label {
+  display: block;
+  color: blue;
+  font-weight: bold;
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 13px;
+  color: blue;
+}
+
+input[type="text"]::placeholder {
+  color: blue;
+  opacity: 0.6;
+}
+
+input[type="file"] {
+  font-size: 12px;
+  color: blue;
+}
+
+.button-group {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+  grid-column: 1 / -1;
+}
+
+button {
+  flex: 1;
+  padding: 12px;
+  cursor: pointer;
+  background-color: blue;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+button:hover {
+  background-color: darkblue;
+}
+
+canvas {
+  border: 2px solid #333;
+  background: #fff;
+  max-width: 100%;
+  max-height: 70vh;
+}
+
+.message {
+  margin-top: 10px;
+  padding: 10px;
+  color: blue;
+  font-weight: bold;
+  font-size: 14px;
+  text-align: center;
+}
+
+@media (max-width: 1024px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <!-- LEFT PANEL - INPUTS -->
+  <div class="left-panel">
+    <h2>स्वप्रमाणित घोषणा पत्र भरें</h2>
+
+    <div class="form-columns">
+      <div class="form-group">
+        <label>नाम</label>
+        <input id="name" type="text" placeholder="नाम दर्ज करें">
+      </div>
+
+      <div class="form-group">
+        <label>पिता / पति का नाम</label>
+        <input id="father" type="text" placeholder="पिता / पति का नाम दर्ज करें">
+      </div>
+
+      <div class="form-group">
+        <label>उम्र</label>
+        <input id="age" type="text" placeholder="उम्र दर्ज करें">
+      </div>
+
+      <div class="form-group">
+        <label>व्यवसाय</label>
+        <input id="occupation" type="text" placeholder="व्यवसाय दर्ज करें">
+      </div>
+
+      <div class="form-group">
+        <label>निवासी</label>
+        <input id="address" type="text" placeholder="निवास स्थान दर्ज करें">
+      </div>
+
+      <div class="form-group">
+        <label>तहसील व जिला</label>
+        <input id="tehsil" type="text" placeholder="तहसील व जिला दर्ज करें">
+      </div>
+
+      <div class="form-group">
+        <label>स्थान</label>
+        <input id="place" type="text" placeholder="स्थान दर्ज करें">
+      </div>
+
+      <div class="form-group">
+        <label>दिनांक</label>
+        <input id="date" type="text" placeholder="DD/MM/YYYY">
+      </div>
+
+      <div class="form-group">
+        <label>आवेदक का नाम</label>
+        <input id="applicant" type="text" placeholder="आवेदक का नाम दर्ज करें">
+      </div>
+
+      <div class="form-group">
+        <label>हस्ताक्षर (Signature)</label>
+        <input id="signatureFile" type="file" accept="image/*">
+      </div>
+
+      <div class="button-group">
+        <button onclick="generate()">Generate</button>
+        <button onclick="download()">Download JPG</button>
+      </div>
+    </div>
+
+    <div class="message" id="message"></div>
+  </div>
+
+  <!-- RIGHT PANEL - CANVAS PREVIEW -->
+  <div class="right-panel">
+    <h2>प्रिव्यू</h2>
+    <canvas id="canvas" width="4480" height="3508"></canvas>
+    <div class="message" id="canvasMessage"></div>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+const messageDiv = document.getElementById("message");
+const canvasMessage = document.getElementById("canvasMessage");
+let signatureImage = null;
+
+// Create a placeholder background
+function createPlaceholderBg() {
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  
+  ctx.strokeStyle = "#000";
+  ctx.lineWidth = 2;
+  ctx.strokeRect(0, 0, canvas.width, canvas.height);
+  
+  ctx.fillStyle = "#999";
+  ctx.font = "36px Arial";
+  ctx.textAlign = "center";
+  ctx.fillText("स्वप्रमाणित घोषणा पत्र", canvas.width / 2, 100);
+  ctx.font = "24px Arial";
+  ctx.fillText("(Background Image Loading...)", canvas.width / 2, 150);
+  ctx.textAlign = "left";
+}
+
+// Load background image without stretching
+const bg = new Image();
+let bgLoaded = false;
+
+const imagePaths = [
+  "src/self.jpg",
+  "./src/self.jpg",
+  "/src/self.jpg"
+];
+
+let pathIndex = 0;
+
+function loadImage() {
+  if (pathIndex < imagePaths.length) {
+    bg.src = imagePaths[pathIndex];
+    pathIndex++;
+  }
+}
+
+bg.onload = () => {
+  bgLoaded = true;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  // Increased width - stretch horizontally while maintaining height
+  const imgWidth = bg.naturalWidth;
+  const imgHeight = bg.naturalHeight;
+  
+  const drawHeight = canvas.height;
+  const drawWidth = canvas.width;
+  
+  ctx.drawImage(bg, 0, 0, drawWidth, drawHeight);
+  canvasMessage.textContent = "✓ Image loaded!";
+};
+
+bg.onerror = () => {
+  if (pathIndex < imagePaths.length) {
+    loadImage();
+  } else {
+    createPlaceholderBg();
+    canvasMessage.textContent = "⚠ Using placeholder";
+  }
+};
+
+loadImage();
+
+// Signature file upload handler
+document.getElementById("signatureFile").addEventListener("change", function(e) {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(event) {
+      signatureImage = new Image();
+      signatureImage.onload = function() {
+        messageDiv.textContent = "✓ Signature loaded!";
+        generate();
+      };
+      signatureImage.onerror = function() {
+        messageDiv.textContent = "⚠ Error loading signature";
+      };
+      signatureImage.src = event.target.result;
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+// Real-time preview
+document.querySelectorAll("input[type='text']").forEach(input => {
+  input.addEventListener("input", generate);
+});
+
+function generate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  if (bgLoaded) {
+    const drawHeight = canvas.height;
+    const drawWidth = canvas.width;
+    
+    ctx.drawImage(bg, 0, 0, drawWidth, drawHeight);
+  }
+
+  ctx.fillStyle = "blue";
+  ctx.font = "550 140px 'Vesper Libre'";
+  ctx.textAlign = "left";
+
+  const nameVal = document.getElementById("name").value || "";
+  const fatherVal = document.getElementById("father").value || "";
+  const ageVal = document.getElementById("age").value || "";
+  const occupationVal = document.getElementById("occupation").value || "";
+  const addressVal = document.getElementById("address").value || "";
+  const tehsilVal = document.getElementById("tehsil").value || "";
+  const placeVal = document.getElementById("place").value || "";
+  const dateVal = document.getElementById("date").value || "";
+  const applicantVal = document.getElementById("applicant").value || "";
+
+  ctx.fillText(nameVal,       1240, 1220);
+  ctx.fillText(fatherVal,     3080, 1220);
+  ctx.fillText(ageVal,        660, 1430);
+  ctx.fillText(occupationVal, 1750, 1430);
+  ctx.fillText(addressVal,    2750, 1430);
+  ctx.fillText(tehsilVal,     550, 1630);
+  ctx.fillText(placeVal,      800, 3020);
+  ctx.fillText(dateVal,       750, 3220);
+  ctx.fillText(applicantVal,  3200, 3220);
+
+  // Draw signature if loaded
+  if (signatureImage) {
+    const sigWidth = 1000;
+    const sigHeight = (signatureImage.naturalHeight * sigWidth) / signatureImage.naturalWidth;
+    ctx.drawImage(signatureImage, 3150, 2750, sigWidth, sigHeight);
+  }
+}
+
+function download() {
+  const allFilled = 
+    document.getElementById("name").value &&
+    document.getElementById("father").value &&
+    document.getElementById("date").value;
+
+  if (!allFilled) {
+    messageDiv.textContent = "⚠ Please fill Name, Father's Name & Date";
+    return;
+  }
+
+  // Get applicant name and convert to English filename
+  const applicantName = document.getElementById("applicant").value.trim() || "Affidavit";
+  const englishFileName = convertToEnglish(applicantName);
+  const fileName = `${englishFileName}_Affidavit.jpg`;
+
+  messageDiv.textContent = "⏳ Compressing...";
+
+  // Create smaller canvas for compression
+  const smallCanvas = document.createElement("canvas");
+  const smallCtx = smallCanvas.getContext("2d");
+  
+  // Reduce canvas size to 50% to drastically reduce file size
+  smallCanvas.width = canvas.width * 0.5;
+  smallCanvas.height = canvas.height * 0.5;
+  
+  // Draw scaled image
+  smallCtx.drawImage(canvas, 0, 0, smallCanvas.width, smallCanvas.height);
+
+  let quality = 0.3;
+  let blob;
+  
+  const tryCompress = () => {
+    const dataUrl = smallCanvas.toDataURL("image/jpeg", quality);
+    blob = dataURItoBlob(dataUrl);
+    
+    if (blob.size > 102400 && quality > 0.05) {
+      quality -= 0.05;
+      tryCompress();
+    } else {
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = fileName;
+      a.click();
+      URL.revokeObjectURL(a.href);
+      
+      const sizeKB = (blob.size / 1024).toFixed(2);
+      messageDiv.textContent = `✓ Downloaded! Size: ${sizeKB}KB`;
+    }
+  };
+  
+  tryCompress();
+}
+
+function dataURItoBlob(dataURI) {
+  const byteString = atob(dataURI.split(',')[1]);
+  const mimeString = dataURI.split(',')[0].match(/:(.*?);/)[1];
+  const ab = new ArrayBuffer(byteString.length);
+  const ia = new Uint8Array(ab);
+  for (let i = 0; i < byteString.length; i++) {
+    ia[i] = byteString.charCodeAt(i);
+  }
+  return new Blob([ab], { type: mimeString });
+}
+
+function convertToEnglish(text) {
+  const hindiToEnglishMap = {
+    'अ': 'A', 'आ': 'Aa', 'इ': 'I', 'ई': 'Ee', 'उ': 'U', 'ऊ': 'Uu',
+    'ऋ': 'Ri', 'ए': 'E', 'ऐ': 'Ai', 'ओ': 'O', 'औ': 'Au',
+    'क': 'K', 'ख': 'Kh', 'ग': 'G', 'घ': 'Gh', 'ङ': 'Ng',
+    'च': 'Ch', 'छ': 'Chh', 'ज': 'J', 'झ': 'Jh', 'ञ': 'Ny',
+    'ट': 'T', 'ठ': 'Th', 'ड': 'D', 'ढ': 'Dh', 'ण': 'N',
+    'त': 'T', 'थ': 'Th', 'द': 'D', 'ध': 'Dh', 'न': 'N',
+    'प': 'P', 'फ': 'Ph', 'ब': 'B', 'भ': 'Bh', 'म': 'M',
+    'य': 'Y', 'र': 'R', 'ल': 'L', 'व': 'V',
+    'श': 'Sh', 'ष': 'Sh', 'स': 'S', 'ह': 'H',
+    '०': '0', '१': '1', '२': '2', '३': '3', '४': '4',
+    '५': '5', '६': '6', '७': '7', '८': '8', '९': '9'
+  };
+
+  let result = '';
+  for (let char of text) {
+    result += hindiToEnglishMap[char] || char;
+  }
+  return result.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
+}
+</script>
+
+</body>
+</html>
