@@ -15,85 +15,290 @@
 }
 
 body {
-  font-family: Arial, sans-serif;
-  background: #f4f4f4;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  background: #f5f7fa;
   padding: 20px;
+  min-height: 100vh;
 }
 
 .container {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  gap: 24px;
   max-width: 1600px;
   margin: 0 auto;
 }
 
 .left-panel {
   background: white;
-  padding: 20px;
+  padding: 25px;
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
   max-height: 100vh;
   overflow-y: auto;
 }
 
 .right-panel {
   background: white;
-  padding: 20px;
+  padding: 32px;
   border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
 h2 {
-  margin-bottom: 20px;
-  color: blue;
+  margin-bottom: 28px;
+  color: #1a1a1a;
   font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.5px;
 }
 
 .form-columns {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 15px;
+  gap: 10px;
 }
 
 .form-group {
-  margin-bottom: 12px;
+  margin-bottom: 16px;
+  position: relative;
 }
 
 label {
   display: block;
-  color: blue;
-  font-weight: bold;
-  margin-bottom: 4px;
+  color: #2c3e50;
+  font-weight: 600;
+  margin-bottom: 8px;
   font-size: 13px;
+  letter-spacing: 0.3px;
 }
 
-input[type="text"] {
+input[type="text"],
+input[type="number"] {
   width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
   border-radius: 4px;
   font-size: 13px;
-  color: blue;
+  color: #1a1a1a;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
-input[type="text"]::placeholder {
-  color: blue;
-  opacity: 0.6;
+input[type="text"]:hover,
+input[type="number"]:hover {
+  border-color: #b3b9c3;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus {
+  outline: none;
+  border-color: #2c3e50;
+  box-shadow: 0 0 0 3px rgba(44, 62, 80, 0.1);
+}
+
+input[type="text"]::placeholder,
+input[type="number"]::placeholder {
+  color: #9ca3af;
 }
 
 input[type="file"] {
   font-size: 12px;
-  color: blue;
+  color: #2c3e50;
+}
+
+
+
+.date-input-wrapper {
+  position: relative;
+}
+
+.date-display {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 13px;
+  color: #1a1a1a;
+  background: white;
+  cursor: pointer;
+  font-weight: 500;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.date-display:hover {
+  border-color: #b3b9c3;
+}
+
+.date-display:active {
+  border-color: #2c3e50;
+  box-shadow: 0 0 0 3px rgba(44, 62, 80, 0.1);
+}
+
+.calendar-popup {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  padding: 20px;
+  margin-top: 8px;
+  display: none;
+  min-width: 320px;
+}
+
+.calendar-popup.active {
+  display: block;
+  animation: slideDown 0.2s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.calendar-header button {
+  background: #2c3e50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 8px 12px;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+  font-size: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.calendar-header button:hover {
+  background: #1a252f;
+}
+
+.calendar-header button:active {
+  background: #0d131a;
+}
+
+.calendar-header h3 {
+  color: #1a1a1a;
+  font-size: 14px;
+  margin: 0;
+  flex: 1;
+  text-align: center;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+}
+
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin-bottom: 12px;
+  background: #f9fafb;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.weekday {
+  color: #6b7280;
+  font-weight: 600;
+  text-align: center;
+  padding: 6px;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+}
+
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.calendar-day {
+  padding: 8px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+  color: #1a1a1a;
+  font-weight: 500;
+  background: white;
+  border: 1px solid #e5e7eb;
+  font-size: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.calendar-day:hover {
+  background: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.calendar-day:active {
+  background: #e5e7eb;
+}
+
+.calendar-day.other-month {
+  color: #d1d5db;
+  cursor: default;
+  background: transparent;
+}
+
+.calendar-day.other-month:hover {
+  background: transparent;
+  color: #d1d5db;
+  border-color: #e5e7eb;
+}
+
+.calendar-day.selected {
+  background: #2c3e50;
+  color: white;
+  border-color: #2c3e50;
+  font-weight: 600;
+}
+
+.calendar-day.selected:hover {
+  background: #1a252f;
+  border-color: #1a252f;
+}
+
+.calendar-day.today {
+  border-color: #059669;
+  background: #f0fdf4;
+  color: #047857;
+  font-weight: 600;
+}
+
+.calendar-day.today.selected {
+  background: #2c3e50;
+  color: white;
+  border-color: #2c3e50;
 }
 
 .button-group {
   display: flex;
-  gap: 10px;
-  margin-top: 20px;
+  gap: 12px;
+  margin-top: 0px;
   grid-column: 1 / -1;
 }
 
@@ -101,40 +306,52 @@ button {
   flex: 1;
   padding: 12px;
   cursor: pointer;
-  background-color: blue;
+  background: #2c3e50;
   color: white;
   border: none;
   border-radius: 4px;
-  font-weight: bold;
-  font-size: 14px;
+  font-weight: 600;
+  font-size: 13px;
+  transition: background-color 0.2s ease;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  letter-spacing: 0.3px;
 }
 
 button:hover {
-  background-color: darkblue;
+  background: #1a252f;
+}
+
+button:active {
+  background: #0d131a;
 }
 
 canvas {
-  border: 2px solid #333;
+  border: 1px solid #d1d5db;
   background: #fff;
   max-width: 100%;
   max-height: 70vh;
+  border-radius: 4px;
 }
 
 .message {
-  margin-top: 10px;
-  padding: 10px;
-  color: blue;
-  font-weight: bold;
-  font-size: 14px;
+  margin-top: 16px;
+  padding: 12px 14px;
+  color: #2c3e50;
+  font-weight: 500;
+  font-size: 12px;
   text-align: center;
+  background: #f9fafb;
+  border-radius: 4px;
+  border: 1px solid #e5e7eb;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
 .sig-preview {
-  border: 1px solid #ccc;
+  border: 1px solid #d1d5db;
   margin-top: 10px;
   padding: 10px;
   text-align: center;
-  background: #f9f9f9;
+  background: #f9fafb;
 }
 
 .sig-preview img {
@@ -146,6 +363,29 @@ canvas {
   .container {
     grid-template-columns: 1fr;
   }
+  
+  .calendar-popup {
+    min-width: 280px;
+  }
+}
+
+/* Scrollbar styling */
+.left-panel::-webkit-scrollbar {
+  width: 6px;
+}
+
+.left-panel::-webkit-scrollbar-track {
+  background: #f5f7fa;
+  border-radius: 3px;
+}
+
+.left-panel::-webkit-scrollbar-thumb {
+  background: #cbd5e0;
+  border-radius: 3px;
+}
+
+.left-panel::-webkit-scrollbar-thumb:hover {
+  background: #a0aec0;
 }
 </style>
 </head>
@@ -155,23 +395,25 @@ canvas {
 <div class="container">
   <!-- LEFT PANEL - INPUTS -->
   <div class="left-panel">
-    <h2>स्वप्रमाणित घोषणा पत्र भरें</h2>
+    <h2>स्वप्रमाणित घोषणा पत्र</h2>
 
     <div class="form-columns">
       <div class="form-group">
-        <label>नाम</label>
-        <input id="name" type="text" placeholder="नाम दर्ज करें">
+        <label>पूरा नाम</label>
+        <input id="name" type="text" placeholder="पूरा नाम दर्ज करें">
       </div>
 
       <div class="form-group">
-        <label>पिता / पति का नाम</label>
-        <input id="father" type="text" placeholder="पिता / पति का नाम दर्ज करें">
+        <label>पिता/पति का नाम</label>
+        <input id="father" type="text" placeholder="पिता या पति का नाम दर्ज करें">
       </div>
 
       <div class="form-group">
-        <label>उम्र</label>
-        <input id="age" type="text" placeholder="उम्र दर्ज करें">
+        <label>जन्म वर्ष</label>
+        <input id="birthYear" type="number" placeholder="जैसे 2000">
       </div>
+
+      
 
       <div class="form-group">
         <label>व्यवसाय</label>
@@ -179,13 +421,13 @@ canvas {
       </div>
 
       <div class="form-group">
-        <label>निवासी</label>
-        <input id="address" type="text" placeholder="निवास स्थान दर्ज करें">
+        <label>आवासीय पता</label>
+        <input id="address" type="text" placeholder="पता दर्ज करें">
       </div>
 
       <div class="form-group">
-        <label>तहसील व जिला</label>
-        <input id="tehsil" type="text" placeholder="तहसील व जिला दर्ज करें">
+        <label>तहसील और जिला</label>
+        <input id="tehsil" type="text" placeholder="तहसील और जिला दर्ज करें">
       </div>
 
       <div class="form-group">
@@ -194,8 +436,29 @@ canvas {
       </div>
 
       <div class="form-group">
-        <label>दिनांक</label>
-        <input id="date" type="text" placeholder="DD/MM/YYYY">
+        <label>तारीख</label>
+        <div class="date-input-wrapper">
+          <div class="date-display" id="dateDisplay" onclick="toggleCalendar()">
+            <span id="dateText">तारीख चुनें</span>
+          </div>
+          <div class="calendar-popup" id="calendarPopup">
+            <div class="calendar-header">
+              <button onclick="prevMonth()">← पिछला</button>
+              <h3 id="monthYear"></h3>
+              <button onclick="nextMonth()">अगला →</button>
+            </div>
+            <div class="calendar-weekdays">
+              <div class="weekday">सोम</div>
+              <div class="weekday">मंगल</div>
+              <div class="weekday">बुध</div>
+              <div class="weekday">गुरु</div>
+              <div class="weekday">शुक्र</div>
+              <div class="weekday">शनि</div>
+              <div class="weekday">रवि</div>
+            </div>
+            <div class="calendar-days" id="calendarDays"></div>
+          </div>
+        </div>
       </div>
 
       <div class="form-group">
@@ -204,13 +467,13 @@ canvas {
       </div>
 
       <div class="form-group">
-        <label>हस्ताक्षर (Signature)</label>
+        <label>हस्ताक्षर</label>
         <input id="signatureFile" type="file" accept="image/*">
       </div>
 
       <div class="button-group">
-        <button onclick="generate()">Generate</button>
-        <button onclick="download()">Download JPG</button>
+        <button onclick="generate()">जेनरेट करें</button>
+        <button onclick="download()">JPG डाउनलोड करें</button>
       </div>
     </div>
 
@@ -219,7 +482,7 @@ canvas {
 
   <!-- RIGHT PANEL - CANVAS PREVIEW -->
   <div class="right-panel">
-    <h2>प्रिव्यू</h2>
+    <h2>पूर्वावलोकन</h2>
     <canvas id="canvas" width="4480" height="3508"></canvas>
     <div class="message" id="canvasMessage"></div>
   </div>
@@ -231,6 +494,9 @@ const ctx = canvas.getContext("2d");
 const messageDiv = document.getElementById("message");
 const canvasMessage = document.getElementById("canvasMessage");
 let signatureImage = null;
+
+let selectedDate = new Date();
+let currentMonth = new Date();
 
 // Load background image
 const bg = new Image();
@@ -255,7 +521,7 @@ bg.onload = () => {
   bgLoaded = true;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
-  canvasMessage.textContent = "✓ Image loaded!";
+  canvasMessage.textContent = "Image loaded successfully";
 };
 
 bg.onerror = () => {
@@ -264,26 +530,32 @@ bg.onerror = () => {
   } else {
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    canvasMessage.textContent = "⚠ Using white background";
+    canvasMessage.textContent = "Using white background";
   }
 };
 
 loadImage();
 
+// Calculate age from birth year
+function calculateAge(birthYear) {
+  const currentYear = new Date().getFullYear();
+  return currentYear - birthYear;
+}
+
+document.getElementById("birthYear").addEventListener("input", generate);
+
 // Remove white/light background from signature
 function removeWhiteBackground(imgData) {
   const data = imgData.data;
-  const threshold = 240; // Colors lighter than this are considered background
+  const threshold = 240;
   
   for (let i = 0; i < data.length; i += 4) {
     const r = data[i];
     const g = data[i + 1];
     const b = data[i + 2];
-    const a = data[i + 3];
     
-    // If pixel is light (white/light background)
     if (r > threshold && g > threshold && b > threshold) {
-      data[i + 3] = 0; // Make transparent
+      data[i + 3] = 0;
     }
   }
   
@@ -294,30 +566,26 @@ function removeWhiteBackground(imgData) {
 document.getElementById("signatureFile").addEventListener("change", function(e) {
   const file = e.target.files[0];
   if (file) {
-    messageDiv.textContent = "⏳ Processing signature...";
+    messageDiv.textContent = "हस्ताक्षर प्रोसेस किया जा रहा है...";
     
     const reader = new FileReader();
     reader.onload = function(event) {
       const img = new Image();
       img.onload = function() {
-        // Create temporary canvas to process image
         const tempCanvas = document.createElement("canvas");
         tempCanvas.width = img.width;
         tempCanvas.height = img.height;
         const tempCtx = tempCanvas.getContext("2d");
         
-        // Draw image on temp canvas
         tempCtx.drawImage(img, 0, 0);
         
-        // Get image data and remove white background
         const imgData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
         const processedData = removeWhiteBackground(imgData);
         tempCtx.putImageData(processedData, 0, 0);
         
-        // Convert to image and use it
         signatureImage = new Image();
         signatureImage.onload = function() {
-          messageDiv.textContent = "✓ Signature processed (background removed)!";
+          messageDiv.textContent = "हस्ताक्षर सफलतापूर्वक प्रोसेस किया गया";
           generate();
         };
         signatureImage.src = tempCanvas.toDataURL("image/png");
@@ -333,6 +601,100 @@ document.querySelectorAll("input[type='text']").forEach(input => {
   input.addEventListener("input", generate);
 });
 
+// Calendar functions
+function updateCalendar() {
+  const year = currentMonth.getFullYear();
+  const month = currentMonth.getMonth();
+  
+  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
+                      'July', 'August', 'September', 'October', 'November', 'December'];
+  document.getElementById("monthYear").textContent = `${monthNames[month]} ${year}`;
+  
+  const firstDay = new Date(year, month, 1);
+  const lastDay = new Date(year, month + 1, 0);
+  const prevLastDay = new Date(year, month, 0);
+  
+  const firstDayOfWeek = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1;
+  const daysInMonth = lastDay.getDate();
+  const daysInPrevMonth = prevLastDay.getDate();
+  
+  let html = '';
+  
+  // Previous month's days
+  for (let i = firstDayOfWeek - 1; i >= 0; i--) {
+    html += `<div class="calendar-day other-month">${daysInPrevMonth - i}</div>`;
+  }
+  
+  // Current month's days
+  for (let day = 1; day <= daysInMonth; day++) {
+    const date = new Date(year, month, day);
+    const isSelected = date.toDateString() === selectedDate.toDateString();
+    const isToday = date.toDateString() === new Date().toDateString();
+    
+    let className = 'calendar-day';
+    if (isSelected) className += ' selected';
+    if (isToday) className += ' today';
+    
+    html += `<div class="${className}" onclick="selectDate(${day})">${day}</div>`;
+  }
+  
+  // Next month's days
+  const totalCells = Math.ceil((firstDayOfWeek + daysInMonth) / 7) * 7;
+  for (let day = 1; day <= totalCells - firstDayOfWeek - daysInMonth; day++) {
+    html += `<div class="calendar-day other-month">${day}</div>`;
+  }
+  
+  document.getElementById("calendarDays").innerHTML = html;
+}
+
+function selectDate(day) {
+  selectedDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
+  updateDateDisplay();
+  toggleCalendar(false);
+  generate();
+}
+
+function prevMonth() {
+  currentMonth.setMonth(currentMonth.getMonth() - 1);
+  updateCalendar();
+}
+
+function nextMonth() {
+  currentMonth.setMonth(currentMonth.getMonth() + 1);
+  updateCalendar();
+}
+
+function updateDateDisplay() {
+  const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+  const dateStr = selectedDate.toLocaleDateString('en-GB', options);
+  document.getElementById("dateText").textContent = dateStr;
+}
+
+function toggleCalendar(show) {
+  const popup = document.getElementById("calendarPopup");
+  if (show === undefined) {
+    popup.classList.toggle("active");
+  } else {
+    popup.classList.toggle("active", show);
+  }
+}
+
+// Close calendar when clicking outside
+document.addEventListener("click", (e) => {
+  const wrapper = document.querySelector(".date-input-wrapper");
+  const popup = document.getElementById("calendarPopup");
+  if (!wrapper.contains(e.target) && popup.classList.contains("active")) {
+    toggleCalendar(false);
+  }
+});
+
+function formatDateForDisplay(date) {
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+}
+
 function generate() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   
@@ -346,12 +708,13 @@ function generate() {
 
   const nameVal = document.getElementById("name").value || "";
   const fatherVal = document.getElementById("father").value || "";
-  const ageVal = document.getElementById("age").value || "";
+const birthYear = parseInt(document.getElementById("birthYear").value);
+const ageVal = birthYear ? calculateAge(birthYear) : "";
   const occupationVal = document.getElementById("occupation").value || "";
   const addressVal = document.getElementById("address").value || "";
   const tehsilVal = document.getElementById("tehsil").value || "";
   const placeVal = document.getElementById("place").value || "";
-  const dateVal = document.getElementById("date").value || "";
+  const dateVal = formatDateForDisplay(selectedDate);
   const applicantVal = document.getElementById("applicant").value || "";
 
   ctx.fillText(nameVal,       1240, 1220);
@@ -364,7 +727,6 @@ function generate() {
   ctx.fillText(dateVal,       750, 3220);
   ctx.fillText(applicantVal,  3200, 3220);
 
-  // Draw signature if loaded
   if (signatureImage) {
     const sigWidth = 1000;
     const sigHeight = (signatureImage.naturalHeight * sigWidth) / signatureImage.naturalWidth;
@@ -375,11 +737,10 @@ function generate() {
 function download() {
   const allFilled = 
     document.getElementById("name").value &&
-    document.getElementById("father").value &&
-    document.getElementById("date").value;
+    document.getElementById("father").value;
 
   if (!allFilled) {
-    messageDiv.textContent = "⚠ Please fill Name, Father's Name & Date";
+    messageDiv.textContent = "कृपया नाम और पिता का नाम भरें";
     return;
   }
 
@@ -387,7 +748,7 @@ function download() {
   const englishFileName = convertToEnglish(applicantName);
   const fileName = `${englishFileName}_Affidavit.jpg`;
 
-  messageDiv.textContent = "⏳ Downloading...";
+  messageDiv.textContent = "डाउनलोड किया जा रहा है...";
 
   const smallCanvas = document.createElement("canvas");
   const smallCtx = smallCanvas.getContext("2d");
@@ -414,7 +775,7 @@ function download() {
       URL.revokeObjectURL(a.href);
       
       const sizeKB = (blob.size / 1024).toFixed(2);
-      messageDiv.textContent = `✓ Downloaded! Size: ${sizeKB}KB`;
+      messageDiv.textContent = `सफलतापूर्वक डाउनलोड किया गया। आकार: ${sizeKB}KB`;
     }
   };
   
@@ -453,6 +814,15 @@ function convertToEnglish(text) {
   }
   return result.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
 }
+
+// Initialize calendar
+window.addEventListener('load', () => {
+  selectedDate = new Date();
+  currentMonth = new Date();
+  updateDateDisplay();
+  updateCalendar();
+  generate();
+});
 </script>
 
 </body>
