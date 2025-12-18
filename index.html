@@ -463,7 +463,7 @@ canvas {
 
       <div class="form-group">
         <label>आवेदक का नाम</label>
-        <input id="applicant" type="text" placeholder="आवेदक का नाम दर्ज करें">
+        <input disabled id="applicant" type="text" placeholder="आवेदक का नाम दर्ज करें">
       </div>
 
       <div class="form-group">
@@ -713,17 +713,17 @@ const ageVal = birthYear ? calculateAge(birthYear) : "";
   const occupationVal = document.getElementById("occupation").value || "";
   const addressVal = document.getElementById("address").value || "";
   const tehsilVal = document.getElementById("tehsil").value || "";
-  const placeVal = document.getElementById("place").value || "";
+  const placeVal = document.getElementById("place").value || "मुरादाबाद";
   const dateVal = formatDateForDisplay(selectedDate);
-  const applicantVal = document.getElementById("applicant").value || "";
+  const applicantVal = document.getElementById("name").value || "";
 
-  ctx.fillText(nameVal,       1240, 1220);
-  ctx.fillText(fatherVal,     3080, 1220);
+  ctx.fillText(nameVal,       1140, 1220);
+  ctx.fillText(fatherVal,     2980, 1220);
   ctx.fillText(ageVal,        660, 1430);
   ctx.fillText(occupationVal, 1750, 1430);
-  ctx.fillText(addressVal,    2750, 1430);
-  ctx.fillText(tehsilVal,     550, 1630);
-  ctx.fillText(placeVal,      800, 3020);
+  ctx.fillText(addressVal,    2680, 1430);
+  ctx.fillText(tehsilVal,     500, 1630);
+  ctx.fillText(placeVal,      750, 3020);
   ctx.fillText(dateVal,       750, 3220);
   ctx.fillText(applicantVal,  3200, 3220);
 
