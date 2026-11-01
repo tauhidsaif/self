@@ -611,21 +611,47 @@ function showCanvasMessage(text) {
 }
 
 function loadImage() {
-  bg.onload = function () {
-    bgLoaded = true;
-    bgFailed = false;
-    backgroundStatus.textContent = "टेम्पलेट तैयार";
-    generate();
-    showCanvasMessage("टेम्पलेट और जानकारी तैयार है।");
-  };
-  bg.onerror = function () {
+  const candidates = Array.from(new Set([
+    new URL("src/self.jpg", document.baseURI).href,
+    new URL("/src/self.jpg", window.location.origin).href
+  ]));
+  let candidateIndex = 0;
+  let loadTimer = null;
+
+  function tryNextCandidate() {
+    window.clearTimeout(loadTimer);
+
+    if (candidateIndex >= candidates.length) {
+      bgLoaded = false;
+      bgFailed = true;
+      backgroundStatus.textContent = "टेम्पलेट नहीं मिला";
+      showCanvasMessage("टेम्पलेट इमेज लोड नहीं हुई। पेज को रीफ्रेश करें और src/self.jpg फाइल की उपलब्धता जांचें।");
+      generate();
+      return;
     }
-    bgFailed = true;
-    backgroundStatus.textContent = "टेम्पलेट नहीं मिला";
-    showCanvasMessage("टेम्पलेट इमेज लोड नहीं हुई। src/self.jpg की लोकेशन जांचें।");
-    generate();
-  };
-  bg.src = "src/self.jpg";
+
+    const imageUrl = candidates[candidateIndex++];
+    backgroundStatus.textContent = "टेम्पलेट लोड हो रहा है";
+
+    bg.onload = function () {
+      window.clearTimeout(loadTimer);
+      bgLoaded = true;
+      bgFailed = false;
+      backgroundStatus.textContent = "टेम्पलेट तैयार";
+      generate();
+      showCanvasMessage("टेम्पलेट और जानकारी तैयार है।");
+    };
+
+    bg.onerror = tryNextCandidate;
+    bg.src = imageUrl;
+
+    // A network request can occasionally hang without firing load/error.
+    loadTimer = window.setTimeout(function () {
+      if (!bgLoaded) tryNextCandidate();
+    }, 8000);
+  }
+
+  tryNextCandidate();
 }
 loadImage();
 
