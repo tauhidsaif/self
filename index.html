@@ -2,6 +2,8 @@
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#eef2f7">
 <title>स्वप्रमाणित घोषणा पत्र Generator</title>
 
 <!-- Vesper Libre Font -->
@@ -387,6 +389,76 @@ canvas {
 .left-panel::-webkit-scrollbar-thumb:hover {
   background: #a0aec0;
 }
+
+/* Modern workspace and responsive controls */
+:root { color-scheme: light; }
+body { background: #eef2f7; padding: 24px; color: #172033; }
+.container { grid-template-columns: minmax(340px, 0.88fr) minmax(0, 1.12fr); gap: 20px; max-width: 1720px; align-items: start; }
+.left-panel, .right-panel { border: 1px solid #e2e8f0; border-radius: 16px; box-shadow: 0 12px 35px rgba(15, 23, 42, .06); }
+.left-panel { padding: 26px; max-height: calc(100vh - 48px); }
+.right-panel { padding: 24px; position: sticky; top: 24px; min-width: 0; }
+h2 { font-size: 19px; margin-bottom: 22px; letter-spacing: -.35px; }
+.form-columns { gap: 4px 14px; }
+.form-group { margin-bottom: 14px; min-width: 0; }
+label { color: #334155; font-size: 12px; letter-spacing: 0; }
+input[type="text"], input[type="number"], input[type="file"] {
+  min-height: 42px; border: 1px solid #cbd5e1; border-radius: 9px; padding: 10px 12px;
+  background: #fff; font-size: 14px;
+}
+input[type="text"]:focus, input[type="number"]:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37, 99, 235, .12); }
+.date-display { min-height: 42px; border: 1px solid #cbd5e1; border-radius: 9px; padding: 12px; }
+.calendar-popup { border-radius: 12px; box-shadow: 0 18px 45px rgba(15,23,42,.18); }
+.calendar-header button { flex: 0 0 auto; border-radius: 8px; }
+.calendar-day { min-height: 34px; border-radius: 8px; }
+.button-group, .export-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 9px; grid-column: 1 / -1; }
+button { min-height: 42px; border-radius: 9px; font-size: 13px; letter-spacing: 0; }
+button:focus-visible, input:focus-visible, .date-display:focus-visible { outline: 3px solid rgba(37,99,235,.25); outline-offset: 2px; }
+.button-group button:first-child { background: #1d4ed8; }
+.button-group button:first-child:hover { background: #1e40af; }
+.button-group .secondary { background: #e8edf5; color: #263449; }
+.button-group .secondary:hover { background: #dbe3ef; }
+.button-group .danger { background: #fff1f2; color: #be123c; }
+.button-group .danger:hover { background: #ffe4e6; }
+.export-actions { margin-top: 10px; }
+.export-actions button { background: #0f766e; }
+.export-actions button:hover { background: #115e59; }
+.export-actions .compact { background: #334155; }
+.export-actions .compact:hover { background: #1e293b; }
+.export-actions .png { background: #475569; }
+.export-actions .png:hover { background: #334155; }
+.message { border-radius: 10px; font-size: 12px; line-height: 1.5; }
+.sig-preview { display: flex; flex-direction: column; align-items: center; gap: 8px; border-radius: 10px; margin-top: 10px; }
+.sig-preview[hidden] { display: none !important; }
+.sig-preview img { object-fit: contain; max-width: 100%; max-height: 88px; }
+.sig-preview button { min-height: 32px; padding: 6px 12px; background: #fff1f2; color: #be123c; }
+.hint { grid-column: 1 / -1; color: #64748b; font-size: 11px; line-height: 1.5; margin-top: 2px; }
+.preview-heading { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.preview-heading h2 { margin-bottom: 0; }
+.preview-tools { width: 100%; display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin: 16px 0 12px; color: #64748b; font-size: 12px; }
+.preview-tools input { width: min(150px, 30%); accent-color: #2563eb; }
+.preview-tools button { flex: 0 0 auto; min-height: 32px; padding: 6px 12px; background: #e8edf5; color: #334155; }
+.canvas-frame { width: 100%; overflow: auto; border: 1px solid #e2e8f0; border-radius: 10px; background: #f8fafc; padding: 10px; text-align: center; }
+canvas { width: 100%; height: auto; max-width: 100%; max-height: none; border: 0; border-radius: 4px; background: #fff; box-shadow: 0 2px 8px rgba(15,23,42,.10); transition: width .15s ease; }
+.right-panel > .message { width: 100%; }
+.status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px; background: #ecfdf5; color: #047857; font-size: 11px; font-weight: 700; white-space: nowrap; }
+@media (max-width: 1050px) {
+  body { padding: 14px; }
+  .container { grid-template-columns: 1fr; }
+  .left-panel { max-height: none; overflow: visible; }
+  .right-panel { position: static; }
+}
+@media (max-width: 600px) {
+  body { padding: 8px; }
+  .left-panel, .right-panel { padding: 16px; border-radius: 12px; }
+  .form-columns { grid-template-columns: 1fr; }
+  .calendar-popup { min-width: 0; width: min(100%, 330px); padding: 12px; }
+  .calendar-weekdays { gap: 2px; padding: 6px; }
+  .calendar-days { gap: 3px; }
+  .calendar-day { padding: 7px 3px; }
+  .button-group, .export-actions { grid-template-columns: 1fr 1fr; }
+  .preview-tools { justify-content: space-between; flex-wrap: wrap; }
+}
+
 </style>
 </head>
 
@@ -468,190 +540,160 @@ canvas {
 
       <div class="form-group">
         <label>हस्ताक्षर</label>
-        <input id="signatureFile" type="file" accept="image/*">
+        <input id="signatureFile" type="file" accept="image/png,image/jpeg,image/webp">
+        <div class="sig-preview" id="signaturePreview" hidden>
+          <img id="signaturePreviewImage" alt="हस्ताक्षर पूर्वावलोकन">
+          <button type="button" onclick="clearSignature()">हस्ताक्षर हटाएं</button>
+        </div>
       </div>
 
       <div class="button-group">
-        <button onclick="generate()">जेनरेट करें</button>
-        <button onclick="download()">JPG डाउनलोड करें</button>
+        <button type="button" onclick="saveDraft(false)">ड्राफ्ट सेव करें</button>
+        <button type="button" class="secondary" onclick="generate()">पूर्वावलोकन अपडेट करें</button>
+        <button type="button" class="danger" onclick="clearForm()">फॉर्म साफ करें</button>
       </div>
+      <div class="export-actions">
+        <button type="button" onclick="download('jpg')">JPG डाउनलोड</button>
+        <button type="button" class="compact" onclick="download('compact')">100 KB JPG</button>
+        <button type="button" class="png" onclick="download('png')">PNG डाउनलोड</button>
+      </div>
+      <p class="hint">आपकी जानकारी इसी ब्राउज़र में अपने-आप सेव होती रहेगी। JPG सामान्य उपयोग के लिए, 100 KB JPG ऑनलाइन फॉर्म और PNG बेहतर गुणवत्ता के लिए है।</p>
     </div>
 
-    <div class="message" id="message"></div>
+    <div class="message" id="message" role="status" aria-live="polite">फॉर्म भरना शुरू करें। बदलाव अपने-आप सेव होंगे।</div>
   </div>
 
   <!-- RIGHT PANEL - CANVAS PREVIEW -->
   <div class="right-panel">
-    <h2>पूर्वावलोकन</h2>
-    <canvas id="canvas" width="4480" height="3508"></canvas>
+    <div class="preview-heading">
+      <h2>पूर्वावलोकन</h2>
+      <span class="status-pill" id="backgroundStatus">टेम्पलेट लोड हो रहा है</span>
+    </div>
+    <div class="preview-tools">
+      <label for="zoomRange">ज़ूम</label>
+      <input id="zoomRange" type="range" min="50" max="140" step="10" value="100">
+      <span id="zoomValue">100%</span>
+      <button type="button" onclick="setZoom(100)">फिट</button>
+    </div>
+    <div class="canvas-frame">
+      <canvas id="canvas" width="4480" height="3508"></canvas>
+    </div>
     <div class="message" id="canvasMessage"></div>
   </div>
 </div>
 
 <script>
+"use strict";
+
 const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+const ctx = canvas.getContext("2d", { willReadFrequently: true });
 const messageDiv = document.getElementById("message");
 const canvasMessage = document.getElementById("canvasMessage");
+const backgroundStatus = document.getElementById("backgroundStatus");
+const STORAGE_KEY = "self-declaration-draft-v2";
+const FIELD_IDS = ["name", "father", "birthYear", "occupation", "address", "tehsil", "place"];
 let signatureImage = null;
-
 let selectedDate = new Date();
 let currentMonth = new Date();
+let saveTimer = null;
+let zoom = 100;
 
-// Load background image
 const bg = new Image();
 let bgLoaded = false;
+let bgFailed = false;
 
-const imagePaths = [
-  "src/self.jpg",
-  "./src/self.jpg",
-  "/src/self.jpg"
-];
+function showMessage(text) {
+  messageDiv.textContent = text;
+}
 
-let pathIndex = 0;
+function showCanvasMessage(text) {
+  canvasMessage.textContent = text;
+}
 
 function loadImage() {
-  if (pathIndex < imagePaths.length) {
-    bg.src = imagePaths[pathIndex];
-    pathIndex++;
-  }
+  bg.onload = function () {
+    bgLoaded = true;
+    bgFailed = false;
+    backgroundStatus.textContent = "टेम्पलेट तैयार";
+    generate();
+    showCanvasMessage("टेम्पलेट और जानकारी तैयार है।");
+  };
+  bg.onerror = function () {
+    if (bg.src.indexOf("src/self.jpg") !== -1 && !bg.src.includes("./src/self.jpg")) {
+      bg.src = "./src/self.jpg";
+      return;
+    }
+    bgFailed = true;
+    backgroundStatus.textContent = "टेम्पलेट नहीं मिला";
+    showCanvasMessage("टेम्पलेट इमेज लोड नहीं हुई। src/self.jpg की लोकेशन जांचें।");
+    generate();
+  };
+  bg.src = "src/self.jpg";
 }
-
-bg.onload = () => {
-  bgLoaded = true;
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
-  canvasMessage.textContent = "Image loaded successfully";
-};
-
-bg.onerror = () => {
-  if (pathIndex < imagePaths.length) {
-    loadImage();
-  } else {
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    canvasMessage.textContent = "Using white background";
-  }
-};
-
 loadImage();
 
-// Calculate age from birth year
-function calculateAge(birthYear) {
-  const currentYear = new Date().getFullYear();
-  return currentYear - birthYear;
+function calculateAge(year) {
+  return new Date().getFullYear() - year;
 }
 
-document.getElementById("birthYear").addEventListener("input", generate);
-
-// Remove white/light background from signature
-function removeWhiteBackground(imgData) {
-  const data = imgData.data;
-  const threshold = 240;
-  
-  for (let i = 0; i < data.length; i += 4) {
-    const r = data[i];
-    const g = data[i + 1];
-    const b = data[i + 2];
-    
-    if (r > threshold && g > threshold && b > threshold) {
-      data[i + 3] = 0;
-    }
-  }
-  
-  return imgData;
+function formatDateForDisplay(date) {
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  return day + "/" + month + "/" + date.getFullYear();
 }
 
-// Signature upload handler
-document.getElementById("signatureFile").addEventListener("change", function(e) {
-  const file = e.target.files[0];
-  if (file) {
-    messageDiv.textContent = "हस्ताक्षर प्रोसेस किया जा रहा है...";
-    
-    const reader = new FileReader();
-    reader.onload = function(event) {
-      const img = new Image();
-      img.onload = function() {
-        const tempCanvas = document.createElement("canvas");
-        tempCanvas.width = img.width;
-        tempCanvas.height = img.height;
-        const tempCtx = tempCanvas.getContext("2d");
-        
-        tempCtx.drawImage(img, 0, 0);
-        
-        const imgData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
-        const processedData = removeWhiteBackground(imgData);
-        tempCtx.putImageData(processedData, 0, 0);
-        
-        signatureImage = new Image();
-        signatureImage.onload = function() {
-          messageDiv.textContent = "हस्ताक्षर सफलतापूर्वक प्रोसेस किया गया";
-          generate();
-        };
-        signatureImage.src = tempCanvas.toDataURL("image/png");
-      };
-      img.src = event.target.result;
-    };
-    reader.readAsDataURL(file);
-  }
-});
+function updateDateDisplay() {
+  document.getElementById("dateText").textContent = formatDateForDisplay(selectedDate);
+}
 
-// Real-time preview
-document.querySelectorAll("input[type='text']").forEach(input => {
-  input.addEventListener("input", generate);
-});
-
-// Calendar functions
 function updateCalendar() {
   const year = currentMonth.getFullYear();
   const month = currentMonth.getMonth();
-  
-  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
-                      'July', 'August', 'September', 'October', 'November', 'December'];
-  document.getElementById("monthYear").textContent = `${monthNames[month]} ${year}`;
-  
+  const monthNames = ["जनवरी", "फरवरी", "मार्च", "अप्रैल", "मई", "जून", "जुलाई", "अगस्त", "सितंबर", "अक्टूबर", "नवंबर", "दिसंबर"];
+  document.getElementById("monthYear").textContent = monthNames[month] + " " + year;
+
   const firstDay = new Date(year, month, 1);
-  const lastDay = new Date(year, month + 1, 0);
-  const prevLastDay = new Date(year, month, 0);
-  
-  const firstDayOfWeek = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1;
-  const daysInMonth = lastDay.getDate();
-  const daysInPrevMonth = prevLastDay.getDate();
-  
-  let html = '';
-  
-  // Previous month's days
-  for (let i = firstDayOfWeek - 1; i >= 0; i--) {
-    html += `<div class="calendar-day other-month">${daysInPrevMonth - i}</div>`;
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const daysInPrevMonth = new Date(year, month, 0).getDate();
+  const offset = (firstDay.getDay() + 6) % 7;
+  const totalCells = Math.ceil((offset + daysInMonth) / 7) * 7;
+  const daysContainer = document.getElementById("calendarDays");
+  daysContainer.replaceChildren();
+
+  for (let cell = 0; cell < totalCells; cell++) {
+    const dayButton = document.createElement("button");
+    dayButton.type = "button";
+    dayButton.className = "calendar-day";
+    if (cell < offset) {
+      dayButton.textContent = String(daysInPrevMonth - offset + cell + 1);
+      dayButton.classList.add("other-month");
+      dayButton.disabled = true;
+      dayButton.setAttribute("aria-hidden", "true");
+    } else if (cell >= offset + daysInMonth) {
+      dayButton.textContent = String(cell - offset - daysInMonth + 1);
+      dayButton.classList.add("other-month");
+      dayButton.disabled = true;
+      dayButton.setAttribute("aria-hidden", "true");
+    } else {
+      const day = cell - offset + 1;
+      const date = new Date(year, month, day);
+      dayButton.textContent = String(day);
+      if (date.toDateString() === selectedDate.toDateString()) dayButton.classList.add("selected");
+      if (date.toDateString() === new Date().toDateString()) dayButton.classList.add("today");
+      dayButton.setAttribute("aria-label", formatDateForDisplay(date));
+      dayButton.addEventListener("click", function () { selectDate(day); });
+    }
+    daysContainer.appendChild(dayButton);
   }
-  
-  // Current month's days
-  for (let day = 1; day <= daysInMonth; day++) {
-    const date = new Date(year, month, day);
-    const isSelected = date.toDateString() === selectedDate.toDateString();
-    const isToday = date.toDateString() === new Date().toDateString();
-    
-    let className = 'calendar-day';
-    if (isSelected) className += ' selected';
-    if (isToday) className += ' today';
-    
-    html += `<div class="${className}" onclick="selectDate(${day})">${day}</div>`;
-  }
-  
-  // Next month's days
-  const totalCells = Math.ceil((firstDayOfWeek + daysInMonth) / 7) * 7;
-  for (let day = 1; day <= totalCells - firstDayOfWeek - daysInMonth; day++) {
-    html += `<div class="calendar-day other-month">${day}</div>`;
-  }
-  
-  document.getElementById("calendarDays").innerHTML = html;
 }
 
 function selectDate(day) {
   selectedDate = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day);
   updateDateDisplay();
+  updateCalendar();
   toggleCalendar(false);
   generate();
+  queueDraftSave();
 }
 
 function prevMonth() {
@@ -664,164 +706,378 @@ function nextMonth() {
   updateCalendar();
 }
 
-function updateDateDisplay() {
-  const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
-  const dateStr = selectedDate.toLocaleDateString('en-GB', options);
-  document.getElementById("dateText").textContent = dateStr;
-}
-
 function toggleCalendar(show) {
   const popup = document.getElementById("calendarPopup");
-  if (show === undefined) {
-    popup.classList.toggle("active");
-  } else {
-    popup.classList.toggle("active", show);
-  }
+  const shouldShow = typeof show === "boolean" ? show : !popup.classList.contains("active");
+  popup.classList.toggle("active", shouldShow);
+  document.getElementById("dateDisplay").setAttribute("aria-expanded", String(shouldShow));
 }
 
-// Close calendar when clicking outside
-document.addEventListener("click", (e) => {
+document.addEventListener("click", function (event) {
   const wrapper = document.querySelector(".date-input-wrapper");
   const popup = document.getElementById("calendarPopup");
-  if (!wrapper.contains(e.target) && popup.classList.contains("active")) {
+  if (wrapper && !wrapper.contains(event.target) && popup.classList.contains("active")) {
     toggleCalendar(false);
   }
 });
 
-function formatDateForDisplay(date) {
-  const day = String(date.getDate()).padStart(2, '0');
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const year = date.getFullYear();
-  return `${day}/${month}/${year}`;
+function fitText(text, x, y, maxWidth, baseSize) {
+  if (text === null || text === undefined || String(text).trim() === "") return;
+  let size = baseSize || 140;
+  const value = String(text).trim();
+  ctx.font = size + "px 'Vesper Libre', serif";
+  while (ctx.measureText(value).width > maxWidth && size > 66) {
+    size -= 4;
+    ctx.font = size + "px 'Vesper Libre', serif";
+  }
+  ctx.fillText(value, x, y, maxWidth);
 }
 
 function generate() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
-  if (bgLoaded) {
-    ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
-  }
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  if (bgLoaded) ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
 
   ctx.fillStyle = "blue";
-  ctx.font = "550 140px 'Vesper Libre'";
   ctx.textAlign = "left";
+  ctx.textBaseline = "alphabetic";
 
-  const nameVal = document.getElementById("name").value || "";
-  const fatherVal = document.getElementById("father").value || "";
-const birthYear = parseInt(document.getElementById("birthYear").value);
-const ageVal = birthYear ? calculateAge(birthYear) : "";
-  const occupationVal = document.getElementById("occupation").value || "";
-  const addressVal = document.getElementById("address").value || "";
-  const tehsilVal = document.getElementById("tehsil").value || "";
-  const placeVal = document.getElementById("place").value || "मुरादाबाद";
+  const nameVal = document.getElementById("name").value.trim();
+  const fatherVal = document.getElementById("father").value.trim();
+  const yearRaw = document.getElementById("birthYear").value.trim();
+  const birthYear = Number(yearRaw);
+  const validYear = yearRaw && Number.isInteger(birthYear) && birthYear >= 1900 && birthYear <= new Date().getFullYear();
+  const ageVal = validYear ? String(calculateAge(birthYear)) : "";
+  const occupationVal = document.getElementById("occupation").value.trim();
+  const addressVal = document.getElementById("address").value.trim();
+  const tehsilVal = document.getElementById("tehsil").value.trim();
+  const placeVal = document.getElementById("place").value.trim() || "मुरादाबाद";
   const dateVal = formatDateForDisplay(selectedDate);
-  const applicantVal = document.getElementById("name").value || "";
 
-  ctx.fillText(nameVal,       1140, 1220);
-  ctx.fillText(fatherVal,     2980, 1220);
-  ctx.fillText(ageVal,        660, 1430);
-  ctx.fillText(occupationVal, 1750, 1430);
-  ctx.fillText(addressVal,    2680, 1430);
-  ctx.fillText(tehsilVal,     500, 1630);
-  ctx.fillText(placeVal,      750, 3020);
-  ctx.fillText(dateVal,       750, 3220);
-  ctx.fillText(applicantVal,  3200, 3220);
+  document.getElementById("applicant").value = nameVal;
+
+  fitText(nameVal,       1140, 1220, 1700, 140);
+  fitText(fatherVal,     2980, 1220, 1300, 140);
+  fitText(ageVal,         660, 1430, 420, 140);
+  fitText(occupationVal, 1750, 1430, 850, 140);
+  fitText(addressVal,    2680, 1430, 1500, 140);
+  fitText(tehsilVal,      500, 1630, 3000, 140);
+  fitText(placeVal,       750, 3020, 1100, 140);
+  fitText(dateVal,        750, 3220, 1000, 140);
+  fitText(nameVal,       3200, 3220, 1100, 140);
 
   if (signatureImage) {
     const sigWidth = 1000;
-    const sigHeight = (signatureImage.naturalHeight * sigWidth) / signatureImage.naturalWidth;
-    ctx.drawImage(signatureImage, 3200, 2750, sigWidth, sigHeight);
+    const sigHeight = Math.min(520, (signatureImage.naturalHeight * sigWidth) / signatureImage.naturalWidth);
+    const finalWidth = Math.min(sigWidth, (signatureImage.naturalWidth * sigHeight) / signatureImage.naturalHeight);
+    ctx.drawImage(signatureImage, 3200, 2750, finalWidth, sigHeight);
   }
 }
 
-function download() {
-  const allFilled = 
-    document.getElementById("name").value &&
-    document.getElementById("father").value;
+function removeLightBackground(imageData) {
+  const data = imageData.data;
+  for (let i = 0; i < data.length; i += 4) {
+    const r = data[i], g = data[i + 1], b = data[i + 2];
+    const lightness = (r + g + b) / 3;
+    if (lightness >= 247 && Math.min(r, g, b) >= 238) {
+      data[i + 3] = 0;
+    } else if (lightness > 205 && Math.min(r, g, b) > 175) {
+      const fade = Math.max(0, Math.min(1, (247 - lightness) / 42));
+      data[i + 3] = Math.round(data[i + 3] * fade);
+    }
+  }
+  return imageData;
+}
 
-  if (!allFilled) {
-    messageDiv.textContent = "कृपया नाम और पिता का नाम भरें";
+function processSignature(file) {
+  if (!file) return;
+  if (!/^image\\/(png|jpeg|webp)$/i.test(file.type)) {
+    showMessage("कृपया PNG, JPG या WEBP हस्ताक्षर इमेज चुनें।");
+    return;
+  }
+  if (file.size > 8 * 1024 * 1024) {
+    showMessage("हस्ताक्षर इमेज 8 MB से छोटी होनी चाहिए।");
     return;
   }
 
-  const applicantName = document.getElementById("applicant").value.trim() || "Affidavit";
-  const englishFileName = convertToEnglish(applicantName);
-  const fileName = `${englishFileName}_Affidavit.jpg`;
+  showMessage("हस्ताक्षर प्रोसेस हो रहा है...");
+  const reader = new FileReader();
+  reader.onerror = function () { showMessage("फाइल पढ़ी नहीं जा सकी। दोबारा प्रयास करें।"); };
+  reader.onload = function (event) {
+    const img = new Image();
+    img.onerror = function () { showMessage("यह इमेज खुल नहीं सकी। दूसरी इमेज चुनें।"); };
+    img.onload = function () {
+      const scale = Math.min(1, 2400 / Math.max(img.naturalWidth, img.naturalHeight));
+      const temp = document.createElement("canvas");
+      temp.width = Math.max(1, Math.round(img.naturalWidth * scale));
+      temp.height = Math.max(1, Math.round(img.naturalHeight * scale));
+      const tempCtx = temp.getContext("2d", { willReadFrequently: true });
+      tempCtx.drawImage(img, 0, 0, temp.width, temp.height);
 
-  messageDiv.textContent = "डाउनलोड किया जा रहा है...";
+      try {
+        const pixels = removeLightBackground(tempCtx.getImageData(0, 0, temp.width, temp.height));
+        tempCtx.putImageData(pixels, 0, 0);
 
-  const smallCanvas = document.createElement("canvas");
-  const smallCtx = smallCanvas.getContext("2d");
-  
-  smallCanvas.width = canvas.width * 0.5;
-  smallCanvas.height = canvas.height * 0.5;
-  
-  smallCtx.drawImage(canvas, 0, 0, smallCanvas.width, smallCanvas.height);
+        const bounds = { left: temp.width, top: temp.height, right: -1, bottom: -1 };
+        const data = pixels.data;
+        for (let y = 0; y < temp.height; y++) {
+          for (let x = 0; x < temp.width; x++) {
+            const alpha = data[(y * temp.width + x) * 4 + 3];
+            if (alpha > 18) {
+              if (x < bounds.left) bounds.left = x;
+              if (x > bounds.right) bounds.right = x;
+              if (y < bounds.top) bounds.top = y;
+              if (y > bounds.bottom) bounds.bottom = y;
+            }
+          }
+        }
+        if (bounds.right < 0) {
+          showMessage("हस्ताक्षर साफ़ नहीं दिख रहा। बेहतर रोशनी में ली गई इमेज चुनें।");
+          return;
+        }
 
-  let quality = 0.3;
-  
-  const tryCompress = () => {
-    const dataUrl = smallCanvas.toDataURL("image/jpeg", quality);
-    const blob = dataURItoBlob(dataUrl);
-    
-    if (blob.size > 102400 && quality > 0.05) {
-      quality -= 0.05;
-      tryCompress();
-    } else {
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = fileName;
-      a.click();
-      URL.revokeObjectURL(a.href);
-      
-      const sizeKB = (blob.size / 1024).toFixed(2);
-      messageDiv.textContent = `सफलतापूर्वक डाउनलोड किया गया। आकार: ${sizeKB}KB`;
+        const padding = 18;
+        const left = Math.max(0, bounds.left - padding);
+        const top = Math.max(0, bounds.top - padding);
+        const right = Math.min(temp.width - 1, bounds.right + padding);
+        const bottom = Math.min(temp.height - 1, bounds.bottom + padding);
+        const cropped = document.createElement("canvas");
+        cropped.width = right - left + 1;
+        cropped.height = bottom - top + 1;
+        cropped.getContext("2d").drawImage(temp, left, top, cropped.width, cropped.height, 0, 0, cropped.width, cropped.height);
+
+        const dataUrl = cropped.toDataURL("image/png");
+        signatureImage = new Image();
+        signatureImage.onload = function () {
+          const preview = document.getElementById("signaturePreview");
+          document.getElementById("signaturePreviewImage").src = dataUrl;
+          preview.hidden = false;
+          generate();
+          showMessage("हस्ताक्षर तैयार है। सफेद बैकग्राउंड हटाया गया और खाली किनारे ट्रिम किए गए।");
+          queueDraftSave();
+        };
+        signatureImage.onerror = function () { showMessage("हस्ताक्षर प्रोसेस नहीं हो सका।"); };
+        signatureImage.src = dataUrl;
+      } catch (error) {
+        showMessage("हस्ताक्षर इमेज प्रोसेस नहीं हो सकी। छोटी या साफ इमेज चुनें।");
+      }
+    };
+    img.src = event.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearSignature() {
+  signatureImage = null;
+  document.getElementById("signatureFile").value = "";
+  document.getElementById("signaturePreview").hidden = true;
+  document.getElementById("signaturePreviewImage").removeAttribute("src");
+  generate();
+  showMessage("हस्ताक्षर हटा दिया गया।");
+}
+
+document.getElementById("signatureFile").addEventListener("change", function (event) {
+  processSignature(event.target.files && event.target.files[0]);
+});
+
+function collectDraft() {
+  const fields = {};
+  FIELD_IDS.forEach(function (id) { fields[id] = document.getElementById(id).value; });
+  return { fields: fields, selectedDate: selectedDate.toISOString(), savedAt: new Date().toISOString() };
+}
+
+function saveDraft(silent) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(collectDraft()));
+    if (silent !== true) showMessage("ड्राफ्ट इस ब्राउज़र में सेव हो गया।");
+    return true;
+  } catch (error) {
+    if (silent !== true) showMessage("ड्राफ्ट सेव नहीं हो सका। ब्राउज़र स्टोरेज उपलब्ध नहीं है।");
+    return false;
+  }
+}
+
+function queueDraftSave() {
+  window.clearTimeout(saveTimer);
+  saveTimer = window.setTimeout(function () {
+    if (saveDraft(true)) showMessage("बदलाव अपने-आप सेव हो गए।");
+  }, 450);
+}
+
+function restoreDraft() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return false;
+    const draft = JSON.parse(raw);
+    if (!draft || !draft.fields) return false;
+    FIELD_IDS.forEach(function (id) {
+      if (typeof draft.fields[id] === "string") document.getElementById(id).value = draft.fields[id];
+    });
+    if (draft.selectedDate) {
+      const parsed = new Date(draft.selectedDate);
+      if (!Number.isNaN(parsed.getTime())) selectedDate = parsed;
     }
-  };
-  
-  tryCompress();
-}
-
-function dataURItoBlob(dataURI) {
-  const byteString = atob(dataURI.split(',')[1]);
-  const mimeString = dataURI.split(',')[0].match(/:(.*?);/)[1];
-  const ab = new ArrayBuffer(byteString.length);
-  const ia = new Uint8Array(ab);
-  for (let i = 0; i < byteString.length; i++) {
-    ia[i] = byteString.charCodeAt(i);
+    currentMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
+    return true;
+  } catch (error) {
+    localStorage.removeItem(STORAGE_KEY);
+    return false;
   }
-  return new Blob([ab], { type: mimeString });
 }
 
-function convertToEnglish(text) {
-  const hindiToEnglishMap = {
-    'अ': 'A', 'आ': 'Aa', 'इ': 'I', 'ई': 'Ee', 'उ': 'U', 'ऊ': 'Uu',
-    'ऋ': 'Ri', 'ए': 'E', 'ऐ': 'Ai', 'ओ': 'O', 'औ': 'Au',
-    'क': 'K', 'ख': 'Kh', 'ग': 'G', 'घ': 'Gh', 'ङ': 'Ng',
-    'च': 'Ch', 'छ': 'Chh', 'ज': 'J', 'झ': 'Jh', 'ञ': 'Ny',
-    'ट': 'T', 'ठ': 'Th', 'ड': 'D', 'ढ': 'Dh', 'ण': 'N',
-    'त': 'T', 'थ': 'Th', 'द': 'D', 'ध': 'Dh', 'न': 'N',
-    'प': 'P', 'फ': 'Ph', 'ब': 'B', 'भ': 'Bh', 'म': 'M',
-    'य': 'Y', 'र': 'R', 'ल': 'L', 'व': 'V',
-    'श': 'Sh', 'ष': 'Sh', 'स': 'S', 'ह': 'H',
-    '०': '0', '१': '1', '२': '2', '३': '3', '४': '4',
-    '५': '5', '६': '6', '७': '7', '८': '8', '९': '9'
-  };
-
-  let result = '';
-  for (let char of text) {
-    result += hindiToEnglishMap[char] || char;
-  }
-  return result.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9_]/g, '');
-}
-
-// Initialize calendar
-window.addEventListener('load', () => {
+function clearForm() {
+  const hasData = FIELD_IDS.some(function (id) { return document.getElementById(id).value.trim(); });
+  if (hasData && !window.confirm("क्या आप सभी जानकारी और सेव किया गया ड्राफ्ट हटाना चाहते हैं?")) return;
+  FIELD_IDS.forEach(function (id) { document.getElementById(id).value = ""; });
   selectedDate = new Date();
   currentMonth = new Date();
+  clearSignature();
   updateDateDisplay();
   updateCalendar();
+  localStorage.removeItem(STORAGE_KEY);
   generate();
+  showMessage("फॉर्म साफ कर दिया गया।");
+}
+
+function safeFileName() {
+  const name = document.getElementById("name").value.trim();
+  const cleaned = name.replace(/[\\\\/:*?"<>|]/g, "_").replace(/\\s+/g, "_").slice(0, 45);
+  return "Declaration_" + (cleaned || new Date().toISOString().slice(0, 10));
+}
+
+function validateForm() {
+  const name = document.getElementById("name").value.trim();
+  const father = document.getElementById("father").value.trim();
+  const yearRaw = document.getElementById("birthYear").value.trim();
+  const year = Number(yearRaw);
+  if (!name || !father) {
+    showMessage("डाउनलोड से पहले पूरा नाम और पिता/पति का नाम भरें।");
+    return false;
+  }
+  if (yearRaw && (!Number.isInteger(year) || year < 1900 || year > new Date().getFullYear())) {
+    showMessage("जन्म वर्ष 1900 से " + new Date().getFullYear() + " के बीच दर्ज करें।");
+    document.getElementById("birthYear").focus();
+    return false;
+  }
+  return true;
+}
+
+function blobFromCanvas(source, type, quality) {
+  return new Promise(function (resolve, reject) {
+    source.toBlob(function (blob) {
+      if (blob) resolve(blob);
+      else reject(new Error("Image export failed"));
+    }, type, quality);
+  });
+}
+
+function triggerDownload(blob, fileName) {
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = fileName;
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  window.setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
+}
+
+async function createCompactJpeg(targetBytes) {
+  let scale = 0.55;
+  let quality = 0.82;
+  let lastBlob = null;
+  for (let attempt = 0; attempt < 14; attempt++) {
+    const small = document.createElement("canvas");
+    small.width = Math.max(1, Math.round(canvas.width * scale));
+    small.height = Math.max(1, Math.round(canvas.height * scale));
+    small.getContext("2d").drawImage(canvas, 0, 0, small.width, small.height);
+    lastBlob = await blobFromCanvas(small, "image/jpeg", quality);
+    if (lastBlob.size <= targetBytes) return lastBlob;
+    if (quality > 0.48) quality -= 0.08;
+    else {
+      scale *= 0.88;
+      quality = 0.78;
+    }
+  }
+  return lastBlob;
+}
+
+async function download(format) {
+  if (!validateForm()) return;
+  generate();
+  const type = format || "jpg";
+  const fileBase = safeFileName();
+  try {
+    showMessage("फाइल तैयार हो रही है...");
+    let blob;
+    let fileName;
+    if (type === "png") {
+      blob = await blobFromCanvas(canvas, "image/png");
+      fileName = fileBase + ".png";
+    } else if (type === "compact") {
+      blob = await createCompactJpeg(100 * 1024);
+      fileName = fileBase + "_100KB.jpg";
+    } else {
+      blob = await blobFromCanvas(canvas, "image/jpeg", 0.92);
+      fileName = fileBase + ".jpg";
+    }
+    triggerDownload(blob, fileName);
+    const sizeKB = (blob.size / 1024).toFixed(1);
+    if (type === "compact" && blob.size > 100 * 1024) {
+      showMessage("JPG डाउनलोड हुआ (" + sizeKB + " KB)। 100 KB से कम आकार गुणवत्ता बनाए रखते हुए संभव नहीं हो पाया।");
+    } else {
+      showMessage("डाउनलोड सफल: " + fileName + " (" + sizeKB + " KB)।");
+    }
+  } catch (error) {
+    showMessage("डाउनलोड नहीं हो सका। दोबारा प्रयास करें या PNG के बजाय JPG चुनें।");
+  }
+}
+
+function setZoom(value) {
+  zoom = Number(value) || 100;
+  const range = document.getElementById("zoomRange");
+  range.value = String(zoom);
+  document.getElementById("zoomValue").textContent = zoom + "%";
+  canvas.style.width = zoom + "%";
+}
+document.getElementById("zoomRange").addEventListener("input", function (event) {
+  setZoom(event.target.value);
+});
+
+FIELD_IDS.forEach(function (id) {
+  const field = document.getElementById(id);
+  field.addEventListener("input", function () {
+    generate();
+    queueDraftSave();
+  });
+});
+
+document.addEventListener("keydown", function (event) {
+  if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "s") {
+    event.preventDefault();
+    saveDraft(false);
+  }
+  if ((event.ctrlKey || event.metaKey) && event.key === "Enter") {
+    event.preventDefault();
+    generate();
+    showMessage("पूर्वावलोकन अपडेट हो गया।");
+  }
+});
+
+window.addEventListener("load", function () {
+  const yearInput = document.getElementById("birthYear");
+  yearInput.min = "1900";
+  yearInput.max = String(new Date().getFullYear());
+  const restored = restoreDraft();
+  updateDateDisplay();
+  updateCalendar();
+  setZoom(100);
+  generate();
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(generate).catch(function () {});
+  }
+  showMessage(restored ? "पिछला ड्राफ्ट वापस लोड हो गया। बदलाव अपने-आप सेव होंगे।" : "फॉर्म भरें। बदलाव अपने-आप इसी ब्राउज़र में सेव होंगे।");
 });
 </script>
 
