@@ -418,9 +418,6 @@ button:focus-visible, input:focus-visible, .date-display:focus-visible { outline
 .export-actions .png { background: #475569; }
 .export-actions .png:hover { background: #334155; }
 .message { border-radius: 10px; font-size: 12px; line-height: 1.5; }
-.signature-status { display: flex; align-items: center; gap: 10px; margin-top: 8px; color: #047857; font-size: 12px; }
-.signature-status[hidden] { display: none !important; }
-.signature-status button { flex: 0 0 auto; min-height: 30px; padding: 5px 10px; background: #fff1f2; color: #be123c; font-size: 11px; }
 .hint { grid-column: 1 / -1; color: #64748b; font-size: 11px; line-height: 1.5; margin-top: 2px; }
 .preview-heading { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .preview-heading h2 { margin-bottom: 0; }
@@ -533,10 +530,7 @@ canvas { width: 100%; height: auto; max-width: 100%; max-height: none; border: 0
       <div class="form-group">
         <label>हस्ताक्षर</label>
         <input id="signatureFile" type="file" accept="image/png,image/jpeg,image/webp">
-        <div class="signature-status" id="signatureStatus" hidden>
-          <span>हस्ताक्षर जोड़ दिया गया</span>
-          <button type="button" onclick="clearSignature()">हटाएं</button>
-        </div>
+
       </div>
 
       <div class="button-group">
@@ -863,7 +857,6 @@ function processSignature(file) {
         const dataUrl = cropped.toDataURL("image/png");
         signatureImage = new Image();
         signatureImage.onload = function () {
-          document.getElementById("signatureStatus").hidden = false;
           generate();
           showMessage("हस्ताक्षर तैयार है। सफेद बैकग्राउंड हटाया गया और खाली किनारे ट्रिम किए गए।");
           queueDraftSave();
@@ -882,7 +875,6 @@ function processSignature(file) {
 function clearSignature() {
   signatureImage = null;
   document.getElementById("signatureFile").value = "";
-  document.getElementById("signatureStatus").hidden = true;
   generate();
   showMessage("हस्ताक्षर हटा दिया गया।");
 }
