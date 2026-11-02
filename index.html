@@ -348,18 +348,7 @@ canvas {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 }
 
-.sig-preview {
-  border: 1px solid #d1d5db;
-  margin-top: 10px;
-  padding: 10px;
-  text-align: center;
-  background: #f9fafb;
-}
 
-.sig-preview img {
-  max-width: 150px;
-  max-height: 100px;
-}
 
 @media (max-width: 1024px) {
   .container {
@@ -429,10 +418,9 @@ button:focus-visible, input:focus-visible, .date-display:focus-visible { outline
 .export-actions .png { background: #475569; }
 .export-actions .png:hover { background: #334155; }
 .message { border-radius: 10px; font-size: 12px; line-height: 1.5; }
-.sig-preview { display: flex; flex-direction: column; align-items: center; gap: 8px; border-radius: 10px; margin-top: 10px; }
-.sig-preview[hidden] { display: none !important; }
-.sig-preview img { object-fit: contain; max-width: 100%; max-height: 88px; }
-.sig-preview button { min-height: 32px; padding: 6px 12px; background: #fff1f2; color: #be123c; }
+.signature-status { display: flex; align-items: center; gap: 10px; margin-top: 8px; color: #047857; font-size: 12px; }
+.signature-status[hidden] { display: none !important; }
+.signature-status button { flex: 0 0 auto; min-height: 30px; padding: 5px 10px; background: #fff1f2; color: #be123c; font-size: 11px; }
 .hint { grid-column: 1 / -1; color: #64748b; font-size: 11px; line-height: 1.5; margin-top: 2px; }
 .preview-heading { width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .preview-heading h2 { margin-bottom: 0; }
@@ -545,9 +533,9 @@ canvas { width: 100%; height: auto; max-width: 100%; max-height: none; border: 0
       <div class="form-group">
         <label>हस्ताक्षर</label>
         <input id="signatureFile" type="file" accept="image/png,image/jpeg,image/webp">
-        <div class="sig-preview" id="signaturePreview" hidden>
-          <img id="signaturePreviewImage" alt="हस्ताक्षर पूर्वावलोकन">
-          <button type="button" onclick="clearSignature()">हस्ताक्षर हटाएं</button>
+        <div class="signature-status" id="signatureStatus" hidden>
+          <span>हस्ताक्षर जोड़ दिया गया</span>
+          <button type="button" onclick="clearSignature()">हटाएं</button>
         </div>
       </div>
 
@@ -875,9 +863,7 @@ function processSignature(file) {
         const dataUrl = cropped.toDataURL("image/png");
         signatureImage = new Image();
         signatureImage.onload = function () {
-          const preview = document.getElementById("signaturePreview");
-          document.getElementById("signaturePreviewImage").src = dataUrl;
-          preview.hidden = false;
+          document.getElementById("signatureStatus").hidden = false;
           generate();
           showMessage("हस्ताक्षर तैयार है। सफेद बैकग्राउंड हटाया गया और खाली किनारे ट्रिम किए गए।");
           queueDraftSave();
@@ -896,8 +882,7 @@ function processSignature(file) {
 function clearSignature() {
   signatureImage = null;
   document.getElementById("signatureFile").value = "";
-  document.getElementById("signaturePreview").hidden = true;
-  document.getElementById("signaturePreviewImage").removeAttribute("src");
+  document.getElementById("signatureStatus").hidden = true;
   generate();
   showMessage("हस्ताक्षर हटा दिया गया।");
 }
