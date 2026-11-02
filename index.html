@@ -6,8 +6,10 @@
 <meta name="theme-color" content="#eef2f7">
 <title>स्वप्रमाणित घोषणा पत्र Generator</title>
 
-<!-- Vesper Libre Font -->
-<link href="https://fonts.googleapis.com/css2?family=Vesper+Libre:wght@500&display=swap" rel="stylesheet">
+<!-- Clean Hindi UI font + handwritten declaration font -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hind:wght@400;500;600;700&family=Kalam:wght@300;400;700&display=swap" rel="stylesheet">
 
 <style>
 * {
@@ -448,6 +450,238 @@ canvas { width: 100%; height: auto; max-width: 100%; max-height: none; border: 0
   .preview-tools { justify-content: space-between; flex-wrap: wrap; }
 }
 
+/* Refined document studio styling — presentation only */
+:root {
+  color-scheme: light;
+  --ink: #172b4d;
+  --muted: #64748b;
+  --line: #e2e8f0;
+  --brand: #2457c5;
+  --brand-dark: #1d459d;
+  --surface: #ffffff;
+}
+html { min-height: 100%; background: #f3f6fb; }
+body {
+  font-family: 'Hind', 'Noto Sans Devanagari', sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(ellipse at 8% 4%, rgba(59, 130, 246, .10), transparent 30%),
+    radial-gradient(ellipse at 95% 85%, rgba(20, 184, 166, .08), transparent 28%),
+    #f3f6fb;
+  padding: 28px;
+}
+.container {
+  max-width: 1760px;
+  grid-template-columns: minmax(360px, .86fr) minmax(0, 1.14fr);
+  gap: 24px;
+  align-items: start;
+}
+.left-panel, .right-panel {
+  background: rgba(255,255,255,.96);
+  border: 1px solid rgba(219, 228, 240, .95);
+  border-radius: 20px;
+  box-shadow: 0 18px 50px rgba(28, 48, 84, .075), 0 2px 8px rgba(28, 48, 84, .035);
+}
+.left-panel {
+  padding: 30px;
+  max-height: calc(100vh - 56px);
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+.right-panel {
+  padding: 26px;
+  position: sticky;
+  top: 28px;
+}
+.left-panel > h2 {
+  color: #152847;
+  font-size: 25px;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -.2px;
+  margin: 0 0 5px;
+}
+.left-panel > h2::before {
+  content: "DOCUMENT STUDIO";
+  display: block;
+  color: #3970c9;
+  font: 700 10px/1.5 'Hind', sans-serif;
+  letter-spacing: 1.8px;
+  margin-bottom: 8px;
+}
+.panel-intro {
+  color: #7b8799;
+  font-size: 13px;
+  margin: 0 0 24px;
+  line-height: 1.65;
+}
+.form-columns { gap: 5px 16px; }
+.form-group { margin-bottom: 16px; }
+label {
+  color: #344765;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 7px;
+}
+input[type="text"], input[type="number"], input[type="file"] {
+  width: 100%;
+  min-height: 45px;
+  border: 1px solid #d9e2ef;
+  border-radius: 11px;
+  padding: 10px 13px;
+  color: #1f2f49;
+  background: #f9fbfe;
+  font: 500 14px 'Hind', 'Noto Sans Devanagari', sans-serif;
+  transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+}
+input[type="file"] { padding: 9px 10px; color: #64748b; }
+input[type="text"]::placeholder, input[type="number"]::placeholder { color: #9aa8bb; }
+input[type="text"]:hover, input[type="number"]:hover, input[type="file"]:hover {
+  border-color: #b9c9df;
+  background: #fff;
+}
+input[type="text"]:focus, input[type="number"]:focus {
+  outline: 0;
+  border-color: #5685d4;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(49, 101, 190, .10);
+}
+.date-display {
+  min-height: 45px;
+  border: 1px solid #d9e2ef;
+  border-radius: 11px;
+  padding: 11px 13px;
+  color: #233b5f;
+  background: #f9fbfe;
+  font: 500 14px 'Hind', 'Noto Sans Devanagari', sans-serif;
+}
+.date-display:hover, .date-display:focus-visible {
+  border-color: #7c9ed2;
+  outline: 0;
+}
+.calendar-popup {
+  border: 1px solid #dce5f0;
+  border-radius: 15px;
+  padding: 16px;
+  box-shadow: 0 22px 55px rgba(25, 45, 80, .18);
+}
+.calendar-header button {
+  background: #243e67;
+  font: 600 12px 'Hind', sans-serif;
+}
+.calendar-day {
+  font: 500 13px 'Hind', sans-serif;
+  border-color: #e7edf5;
+}
+.calendar-day.selected { background: #285bb8; border-color: #285bb8; }
+.calendar-day.today:not(.selected) { background: #edf5ff; color: #2457a6; border-color: #a9c4ed; }
+button {
+  font-family: 'Hind', 'Noto Sans Devanagari', sans-serif;
+  border-radius: 10px;
+  font-weight: 600;
+}
+.button-group { gap: 7px; }
+.button-group button {
+  min-height: 39px;
+  padding: 7px 5px;
+  font-size: 12px;
+  box-shadow: none;
+}
+.button-group button:first-child { background: #285bb8; }
+.button-group button:first-child:hover { background: #204a99; }
+.button-group .secondary { background: #edf2f8; color: #344765; }
+.button-group .secondary:hover { background: #e1e9f3; }
+.button-group .danger { background: #fff0f1; color: #b54758; }
+.button-group .danger:hover { background: #ffe2e5; }
+.export-actions { margin-top: 13px; }
+.export-actions button {
+  min-height: 45px;
+  padding: 10px 16px;
+  background: linear-gradient(135deg, #167d78, #11665f);
+  color: #fff;
+  box-shadow: 0 7px 15px rgba(17, 102, 95, .15);
+  font-size: 14px;
+}
+.export-actions button:hover {
+  background: linear-gradient(135deg, #126e69, #0d5752);
+  box-shadow: 0 9px 18px rgba(17, 102, 95, .20);
+  transform: translateY(-1px);
+}
+.hint {
+  color: #7b8799;
+  font-size: 11px;
+  line-height: 1.7;
+  margin-top: 13px;
+}
+.message {
+  border: 1px solid #e2eaf4;
+  border-radius: 12px;
+  padding: 11px 14px;
+  color: #52657f;
+  background: #f7faff;
+  font: 500 12px/1.6 'Hind', 'Noto Sans Devanagari', sans-serif;
+}
+.right-panel { gap: 0; }
+.preview-heading h2 {
+  color: #1d3150;
+  font: 700 19px/1.4 'Hind', 'Noto Sans Devanagari', sans-serif;
+  letter-spacing: 0;
+}
+.status-pill {
+  background: #edf7f3;
+  color: #24745b;
+  border: 1px solid #d8eee5;
+  font: 600 11px 'Hind', sans-serif;
+}
+.preview-tools {
+  color: #78869a;
+  font: 500 12px 'Hind', sans-serif;
+}
+.preview-tools button {
+  background: #edf2f8;
+  color: #405572;
+  border: 1px solid #e0e8f2;
+}
+.preview-tools button:hover { background: #e1eaf5; }
+.preview-tools input { accent-color: #2b5db6; }
+.canvas-frame {
+  border: 1px solid #dfe7f1;
+  border-radius: 14px;
+  padding: 12px;
+  background: linear-gradient(145deg, #f2f6fb, #eaf0f7);
+}
+canvas {
+  display: block;
+  border-radius: 5px;
+  box-shadow: 0 5px 20px rgba(30, 48, 75, .13);
+}
+.right-panel > .message {
+  margin-top: 13px;
+  background: #f8fafc;
+}
+button:focus-visible, input:focus-visible, .date-display:focus-visible {
+  outline: 3px solid rgba(49, 101, 190, .22);
+  outline-offset: 2px;
+}
+@media (max-width: 1050px) {
+  body { padding: 16px; }
+  .container { grid-template-columns: 1fr; max-width: 900px; }
+  .left-panel { max-height: none; }
+  .right-panel { position: static; }
+}
+@media (max-width: 600px) {
+  body { padding: 9px; }
+  .left-panel, .right-panel { padding: 17px; border-radius: 15px; }
+  .left-panel > h2 { font-size: 22px; }
+  .panel-intro { margin-bottom: 19px; }
+  .form-columns { grid-template-columns: 1fr; }
+  .button-group { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 5px; }
+  .button-group button { min-height: 36px; padding: 6px 2px; font-size: 10px; }
+  .export-actions button { min-height: 43px; font-size: 13px; }
+  .preview-tools { justify-content: space-between; flex-wrap: wrap; }
+  .canvas-frame { padding: 7px; }
+}
+
 </style>
 </head>
 
@@ -457,6 +691,7 @@ canvas { width: 100%; height: auto; max-width: 100%; max-height: none; border: 0
   <!-- LEFT PANEL - INPUTS -->
   <div class="left-panel">
     <h2>स्वप्रमाणित घोषणा पत्र</h2>
+    <p class="panel-intro">अपनी जानकारी भरें — आपका घोषणा पत्र साथ-साथ तैयार होगा।</p>
 
     <div class="form-columns">
       <div class="form-group">
@@ -732,10 +967,10 @@ function fitText(text, x, y, maxWidth, baseSize) {
   if (text === null || text === undefined || String(text).trim() === "") return;
   let size = baseSize || 140;
   const value = String(text).trim();
-  ctx.font = size + "px 'Vesper Libre', serif";
+  ctx.font = "400 " + size + "px 'Kalam', cursive";
   while (ctx.measureText(value).width > maxWidth && size > 66) {
     size -= 4;
-    ctx.font = size + "px 'Vesper Libre', serif";
+    ctx.font = "400 " + size + "px 'Kalam', cursive";
   }
   ctx.fillText(value, x, y, maxWidth);
 }
@@ -746,7 +981,7 @@ function generate() {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   if (bgLoaded) ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
 
-  ctx.fillStyle = "blue";
+  ctx.fillStyle = "#173b78";
   ctx.textAlign = "left";
   ctx.textBaseline = "alphabetic";
 
@@ -1093,6 +1328,11 @@ window.addEventListener("load", function () {
   updateCalendar();
   setZoom(100);
   generate();
+  if (document.fonts && document.fonts.load) {
+    document.fonts.load("400 140px Kalam", "हिन्दी घोषणा पत्र")
+      .then(generate)
+      .catch(function () {});
+  }
   if (document.fonts && document.fonts.ready) {
     document.fonts.ready.then(generate).catch(function () {});
   }
