@@ -1196,13 +1196,8 @@ function clearForm() {
 }
 
 function safeFileName() {
-  const name = document.getElementById("name").value.trim();
-  const cleaned = name
-    .replace(/[\\/:*?"<>|\u0000-\u001f\u007f]/g, "")
-    .replace(/\s+/g, "_")
-    .replace(/^\.+|\.+$/g, "")
-    .slice(0, 24);
-  return (cleaned || "Declaration") + ".jpg";
+  // Fixed short ASCII name: displays consistently on Hindi and English devices.
+  return "Declaration.jpg";
 }
 
 function validateForm() {
@@ -1243,48 +1238,30 @@ function triggerDownload(blob, fileName) {
 }
 
 async function createCompactJpeg(sourceCanvas, maxBytes) {
-  let scale = 0.65;
-  const minimumQuality = 0.30;
-  const maximumQuality = 0.90;
+  let scale = 1;
+  let quality = 0.76;
 
-  while (true) {
+  /* One encode per size. If the image is still too large, reduce dimensions
+     and quality together rather than running many binary-search encodes. */
+  for (let attempt = 0; attempt < 12; attempt++) {
     const small = document.createElement("canvas");
     small.width = Math.max(1, Math.round(sourceCanvas.width * scale));
     small.height = Math.max(1, Math.round(sourceCanvas.height * scale));
     const smallContext = small.getContext("2d");
     if (!smallContext) throw new Error("Could not create export canvas");
+
     smallContext.fillStyle = "#ffffff";
     smallContext.fillRect(0, 0, small.width, small.height);
     smallContext.drawImage(sourceCanvas, 0, 0, small.width, small.height);
 
-    const lowestQualityBlob = await blobFromCanvas(small, "image/jpeg", minimumQuality);
-    if (lowestQualityBlob.size < maxBytes) {
-      const highestQualityBlob = await blobFromCanvas(small, "image/jpeg", maximumQuality);
-      if (highestQualityBlob.size < maxBytes) return highestQualityBlob;
+    const blob = await blobFromCanvas(small, "image/jpeg", quality);
+    if (blob && blob.size < maxBytes) return blob;
 
-      let bestBlob = lowestQualityBlob;
-      let low = minimumQuality;
-      let high = maximumQuality;
-
-      for (let attempt = 0; attempt < 8; attempt++) {
-        const quality = (low + high) / 2;
-        const candidate = await blobFromCanvas(small, "image/jpeg", quality);
-        if (candidate.size < maxBytes) {
-          bestBlob = candidate;
-          low = quality;
-        } else {
-          high = quality;
-        }
-      }
-
-      if (bestBlob.size < maxBytes) return bestBlob;
-    }
-
-    if (small.width === 1 && small.height === 1) {
-      throw new Error("Could not compress the image below the required file size");
-    }
-    scale *= 0.82;
+    scale *= 0.84;
+    quality = Math.max(0.48, quality - 0.035);
   }
+
+  throw new Error("Could not compress image below the required file size");
 }
 
 async function download() {
@@ -1296,11 +1273,11 @@ async function download() {
     showMessage("JPG तैयार हो रही है...");
     if (document.fonts && document.fonts.ready) await document.fonts.ready;
 
-    /* Keep the live preview small; build the original-size document only
-       when the user downloads it. */
+    /* Render directly at a practical upload resolution instead of building
+       a huge print canvas that must immediately be shrunk for a 99 KB file. */
     const exportCanvas = document.createElement("canvas");
-    exportCanvas.width = DOCUMENT_WIDTH;
-    exportCanvas.height = DOCUMENT_HEIGHT;
+    exportCanvas.width = 1600;
+    exportCanvas.height = Math.round(DOCUMENT_HEIGHT * exportCanvas.width / DOCUMENT_WIDTH);
     renderDocument(exportCanvas);
 
     const blob = await createCompactJpeg(exportCanvas, maxBytes);
@@ -1310,10 +1287,10 @@ async function download() {
 
     triggerDownload(blob, fileName);
     const sizeKB = (blob.size / 1000).toFixed(1);
-    showMessage("डाउनलोड सफल: " + fileName + " (" + sizeKB + " KB)।");
+    showMessage("Download complete: " + fileName + " (" + sizeKB + " KB).");
   } catch (error) {
     console.error("JPG export failed:", error);
-    showMessage("JPG तैयार नहीं हो सकी। कृपया दोबारा प्रयास करें।");
+    showMessage("Download failed. Please try again.");
   }
 }
 
