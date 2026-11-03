@@ -1195,9 +1195,82 @@ function clearForm() {
   showMessage("फॉर्म साफ कर दिया गया।");
 }
 
+function transliterateHindiName(value) {
+  const independentVowels = {
+    "अ":"a","आ":"a","इ":"i","ई":"i","उ":"u","ऊ":"u","ऋ":"ri",
+    "ए":"e","ऐ":"ai","ओ":"o","औ":"au"
+  };
+  const consonants = {
+    "क":"k","ख":"kh","ग":"g","घ":"gh","ङ":"ng",
+    "च":"ch","छ":"chh","ज":"j","झ":"jh","ञ":"ny",
+    "ट":"t","ठ":"th","ड":"d","ढ":"dh","ण":"n",
+    "त":"t","थ":"th","द":"d","ध":"dh","न":"n",
+    "प":"p","फ":"f","ब":"b","भ":"bh","म":"m",
+    "य":"y","र":"r","ल":"l","व":"v",
+    "श":"sh","ष":"sh","स":"s","ह":"h"
+  };
+  const vowelMarks = {
+    "ा":"a","ि":"i","ी":"i","ु":"u","ू":"u","ृ":"ri",
+    "े":"e","ै":"ai","ो":"o","ौ":"au"
+  };
+  const special = {
+    "क़":"q","ख़":"kh","ग़":"gh","ज़":"z","ड़":"r","ढ़":"rh","फ़":"f","य़":"y",
+    "ं":"n","ँ":"n","ः":"h","ऽ":""
+  };
+  const chars = Array.from(String(value || "").normalize("NFC"));
+  let output = "";
+  let lastWasInherentVowel = false;
+
+  for (let i = 0; i < chars.length; i++) {
+    const ch = chars[i];
+
+    if (consonants[ch]) {
+      output += consonants[ch] + "a";
+      lastWasInherentVowel = true;
+    } else if (independentVowels[ch]) {
+      output += independentVowels[ch];
+      lastWasInherentVowel = false;
+    } else if (vowelMarks[ch]) {
+      output += vowelMarks[ch];
+      lastWasInherentVowel = false;
+    } else if (ch === "्") {
+      if (output.endsWith("a")) output = output.slice(0, -1);
+      lastWasInherentVowel = false;
+    } else if (ch === "़") {
+      // Nukta is handled by the dedicated precomposed letter map above.
+      lastWasInherentVowel = false;
+    } else if (special[ch] !== undefined) {
+      output += special[ch];
+      lastWasInherentVowel = false;
+    } else if (/[0-9]/.test(ch)) {
+      output += ch;
+      lastWasInherentVowel = false;
+    } else if (/\s/.test(ch)) {
+      output += " ";
+      lastWasInherentVowel = false;
+    } else if (/[,.'’_-]/.test(ch)) {
+      output += " ";
+      lastWasInherentVowel = false;
+    } else if (/[A-Za-z]/.test(ch)) {
+      output += ch;
+      lastWasInherentVowel = false;
+    } else if (/[\u0900-\u097F]/.test(ch)) {
+      // Ignore unsupported Devanagari combining marks.
+    } else {
+      output += " ";
+      lastWasInherentVowel = false;
+    }
+  }
+
+  // Hindi commonly omits the final inherent "a" when spoken (e.g. Rahul, Kamal).
+  if (lastWasInherentVowel && output.endsWith("a")) output = output.slice(0, -1);
+  return output.replace(/\s+/g, " ").trim();
+}
+
 function safeFileName() {
   const name = document.getElementById("name").value.trim();
-  const englishName = name
+  const romanized = /[\u0900-\u097F]/.test(name) ? transliterateHindiName(name) : name;
+  const englishName = romanized
     .normalize("NFKD")
     .replace(/[^A-Za-z0-9]+/g, "_")
     .replace(/^_+|_+$/g, "")
