@@ -795,7 +795,7 @@ button:focus-visible, input:focus-visible, .date-display:focus-visible {
       <button type="button" onclick="setZoom(100)">फिट</button>
     </div>
     <div class="canvas-frame">
-      <canvas id="canvas" width="4480" height="3508"></canvas>
+      <canvas id="canvas" width="1120" height="877"></canvas>
     </div>
     <div class="message" id="canvasMessage"></div>
   </div>
@@ -805,7 +805,8 @@ button:focus-visible, input:focus-visible, .date-display:focus-visible {
 "use strict";
 
 const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d", { willReadFrequently: true });
+const DOCUMENT_WIDTH = 4480;
+const DOCUMENT_HEIGHT = 3508;
 const messageDiv = document.getElementById("message");
 const canvasMessage = document.getElementById("canvasMessage");
 const backgroundStatus = document.getElementById("backgroundStatus");
@@ -815,6 +816,7 @@ let signatureImage = null;
 let selectedDate = new Date();
 let currentMonth = new Date();
 let saveTimer = null;
+let previewFrame = null;
 let zoom = 100;
 
 const bg = new Image();
@@ -963,27 +965,34 @@ document.addEventListener("click", function (event) {
   }
 });
 
-function fitText(text, x, y, maxWidth, baseSize) {
+function fitText(targetCtx, text, x, y, maxWidth, baseSize) {
   if (text === null || text === undefined || String(text).trim() === "") return;
   let size = baseSize || 140;
   const value = String(text).trim();
-  ctx.font = "400 " + size + "px 'Kalam', cursive";
-  while (ctx.measureText(value).width > maxWidth && size > 66) {
+  targetCtx.font = "400 " + size + "px 'Kalam', cursive";
+  while (targetCtx.measureText(value).width > maxWidth && size > 66) {
     size -= 4;
-    ctx.font = "400 " + size + "px 'Kalam', cursive";
+    targetCtx.font = "400 " + size + "px 'Kalam', cursive";
   }
-  ctx.fillText(value, x, y, maxWidth);
+  targetCtx.fillText(value, x, y, maxWidth);
 }
 
-function generate() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = "#ffffff";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  if (bgLoaded) ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
+/* Draw at the original document coordinates on either the small preview
+   canvas or the full-resolution export canvas. */
+function renderDocument(targetCanvas) {
+  const targetCtx = targetCanvas.getContext("2d");
+  if (!targetCtx) throw new Error("Canvas rendering is unavailable");
 
-  ctx.fillStyle = "#173b78";
-  ctx.textAlign = "left";
-  ctx.textBaseline = "alphabetic";
+  const scale = targetCanvas.width / DOCUMENT_WIDTH;
+  targetCtx.setTransform(scale, 0, 0, scale, 0, 0);
+  targetCtx.clearRect(0, 0, DOCUMENT_WIDTH, DOCUMENT_HEIGHT);
+  targetCtx.fillStyle = "#ffffff";
+  targetCtx.fillRect(0, 0, DOCUMENT_WIDTH, DOCUMENT_HEIGHT);
+  if (bgLoaded) targetCtx.drawImage(bg, 0, 0, DOCUMENT_WIDTH, DOCUMENT_HEIGHT);
+
+  targetCtx.fillStyle = "#173b78";
+  targetCtx.textAlign = "left";
+  targetCtx.textBaseline = "alphabetic";
 
   const nameVal = document.getElementById("name").value.trim();
   const fatherVal = document.getElementById("father").value.trim();
@@ -999,22 +1008,31 @@ function generate() {
 
   document.getElementById("applicant").value = nameVal;
 
-  fitText(nameVal,       1140, 1220, 1700, 140);
-  fitText(fatherVal,     2980, 1220, 1300, 140);
-  fitText(ageVal,         660, 1430, 420, 140);
-  fitText(occupationVal, 1750, 1430, 850, 140);
-  fitText(addressVal,    2680, 1430, 1500, 140);
-  fitText(tehsilVal,      500, 1630, 3000, 140);
-  fitText(placeVal,       750, 3020, 1100, 140);
-  fitText(dateVal,        750, 3220, 1000, 140);
-  fitText(nameVal,       3200, 3220, 1100, 140);
+  fitText(targetCtx, nameVal,       1140, 1220, 1700, 140);
+  fitText(targetCtx, fatherVal,     2980, 1220, 1300, 140);
+  fitText(targetCtx, ageVal,         660, 1430, 420, 140);
+  fitText(targetCtx, occupationVal, 1750, 1430, 850, 140);
+  fitText(targetCtx, addressVal,    2680, 1430, 1500, 140);
+  fitText(targetCtx, tehsilVal,      500, 1630, 3000, 140);
+  fitText(targetCtx, placeVal,       750, 3020, 1100, 140);
+  fitText(targetCtx, dateVal,        750, 3220, 1000, 140);
+  fitText(targetCtx, nameVal,       3200, 3220, 1100, 140);
 
   if (signatureImage) {
     const sigWidth = 1000;
     const sigHeight = Math.min(520, (signatureImage.naturalHeight * sigWidth) / signatureImage.naturalWidth);
     const finalWidth = Math.min(sigWidth, (signatureImage.naturalWidth * sigHeight) / signatureImage.naturalHeight);
-    ctx.drawImage(signatureImage, 3200, 2750, finalWidth, sigHeight);
+    targetCtx.drawImage(signatureImage, 3200, 2750, finalWidth, sigHeight);
   }
+}
+
+/* Coalesce rapid field changes into one lightweight preview render per frame. */
+function generate() {
+  if (previewFrame !== null) return;
+  previewFrame = window.requestAnimationFrame(function () {
+    previewFrame = null;
+    renderDocument(canvas);
+  });
 }
 
 function removeLightBackground(imageData) {
@@ -1179,8 +1197,12 @@ function clearForm() {
 
 function safeFileName() {
   const name = document.getElementById("name").value.trim();
-  const cleaned = encodeURIComponent(name).replaceAll("%", "_").slice(0, 45);
-  return "Declaration_" + (cleaned || new Date().toISOString().slice(0, 10));
+  const cleaned = name
+    .replace(/[\\/:*?"<>|\u0000-\u001f\u007f]/g, "")
+    .replace(/\s+/g, "_")
+    .replace(/^\.+|\.+$/g, "")
+    .slice(0, 24);
+  return (cleaned || "Declaration") + ".jpg";
 }
 
 function validateForm() {
@@ -1220,20 +1242,20 @@ function triggerDownload(blob, fileName) {
   window.setTimeout(function () { URL.revokeObjectURL(url); }, 1500);
 }
 
-async function createCompactJpeg(maxBytes) {
+async function createCompactJpeg(sourceCanvas, maxBytes) {
   let scale = 0.65;
   const minimumQuality = 0.30;
   const maximumQuality = 0.90;
 
   while (true) {
     const small = document.createElement("canvas");
-    small.width = Math.max(1, Math.round(canvas.width * scale));
-    small.height = Math.max(1, Math.round(canvas.height * scale));
+    small.width = Math.max(1, Math.round(sourceCanvas.width * scale));
+    small.height = Math.max(1, Math.round(sourceCanvas.height * scale));
     const smallContext = small.getContext("2d");
     if (!smallContext) throw new Error("Could not create export canvas");
     smallContext.fillStyle = "#ffffff";
     smallContext.fillRect(0, 0, small.width, small.height);
-    smallContext.drawImage(canvas, 0, 0, small.width, small.height);
+    smallContext.drawImage(sourceCanvas, 0, 0, small.width, small.height);
 
     const lowestQualityBlob = await blobFromCanvas(small, "image/jpeg", minimumQuality);
     if (lowestQualityBlob.size < maxBytes) {
@@ -1267,24 +1289,31 @@ async function createCompactJpeg(maxBytes) {
 
 async function download() {
   if (!validateForm()) return;
-  generate();
   const maxBytes = 99 * 1000;
-  const fileName = safeFileName() + "_under_99KB.jpg";
+  const fileName = safeFileName();
 
   try {
-    showMessage("99 KB से कम JPG तैयार हो रही है...");
-    const blob = await createCompactJpeg(maxBytes);
+    showMessage("JPG तैयार हो रही है...");
+    if (document.fonts && document.fonts.ready) await document.fonts.ready;
 
+    /* Keep the live preview small; build the original-size document only
+       when the user downloads it. */
+    const exportCanvas = document.createElement("canvas");
+    exportCanvas.width = DOCUMENT_WIDTH;
+    exportCanvas.height = DOCUMENT_HEIGHT;
+    renderDocument(exportCanvas);
+
+    const blob = await createCompactJpeg(exportCanvas, maxBytes);
     if (!blob || blob.size >= maxBytes) {
       throw new Error("The exported image exceeded the file-size limit");
     }
 
     triggerDownload(blob, fileName);
     const sizeKB = (blob.size / 1000).toFixed(1);
-    showMessage("डाउनलोड सफल: " + fileName + " (" + sizeKB + " KB)। फाइल 99 KB से कम है।");
+    showMessage("डाउनलोड सफल: " + fileName + " (" + sizeKB + " KB)।");
   } catch (error) {
     console.error("JPG export failed:", error);
-    showMessage("99 KB से कम JPG नहीं बन सकी। कृपया दोबारा प्रयास करें।");
+    showMessage("JPG तैयार नहीं हो सकी। कृपया दोबारा प्रयास करें।");
   }
 }
 
