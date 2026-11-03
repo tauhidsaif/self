@@ -1248,6 +1248,8 @@ function transliterateHindiName(value) {
       output += ch;
       lastWasInherentVowel = false;
     } else if (/\s/.test(ch)) {
+      // Drop the final inherent "a" in each Hindi word (e.g. Rahul, not Rahula).
+      if (lastWasInherentVowel && output.endsWith("a")) output = output.slice(0, -1);
       output += " ";
       lastWasInherentVowel = false;
     } else if (/[,.'’_-]/.test(ch)) {
