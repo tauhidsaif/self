@@ -1196,8 +1196,13 @@ function clearForm() {
 }
 
 function safeFileName() {
-  // Fixed short ASCII name: displays consistently on Hindi and English devices.
-  return "Declaration.jpg";
+  const name = document.getElementById("name").value.trim();
+  const englishName = name
+    .normalize("NFKD")
+    .replace(/[^A-Za-z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "")
+    .slice(0, 24);
+  return "decl_" + (englishName || "name") + ".jpg";
 }
 
 function validateForm() {
