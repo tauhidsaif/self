@@ -1231,6 +1231,8 @@ function transliterateHindiName(value) {
       output += independentVowels[ch];
       lastWasInherentVowel = false;
     } else if (vowelMarks[ch]) {
+      // A vowel sign replaces the consonant's default inherent "a".
+      if (lastWasInherentVowel && output.endsWith("a")) output = output.slice(0, -1);
       output += vowelMarks[ch];
       lastWasInherentVowel = false;
     } else if (ch === "्") {
